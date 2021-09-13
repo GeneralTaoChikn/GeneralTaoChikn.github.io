@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
@@ -15,6 +16,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css">
     <link rel="stylesheet" href="assets/css/Lightbox-Gallery.css">
     <link rel="stylesheet" href="assets/css/untitled.css">
+    <script src="https://unpkg.com/vue@next" defer></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="./assets/js/apiCall.js" defer></script>
 </head>
 
 <body>
@@ -73,6 +77,24 @@
             </div>
         </div>
     </section>
+
+    <!-- RANDOM API CALL  -->
+    <section id ="api-call" class="portfolio-block website gradient">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-12 col-lg-5 offset-lg-1 text">
+                    <h3>API call: Random cat fact and dog image</h3>
+                    <p>Random Cat Fact:<br>{{catFact}} <br>
+                    <button @click="getCatFact">Get Fact</button> <br>
+                    <button @click="getDogImage">Get DogImage</button>
+                </div>
+                <div class="col-md-12 col-lg-5">
+                    <img :src="dogImageURL" style="height: 300px;; width: auto;">
+                </div>
+            </div>
+        </div>
+    </section>
+
     <footer class="page-footer">
         <div class="container">
             <div class="links"><a href="https://www.cs.odu.edu/~cdiasant/IT_325/Assignment9/">About me</a><a href="contact-me.html">Contact me</a><a href="projects-grid-cards.html">Projects</a></div>
@@ -84,6 +106,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/js/lightbox.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script>
     <script src="assets/js/theme.js"></script>
+
+    <script src="https://unpkg.com/vue@next" defer></script>
+    <script src="apiCall.js" defer></script>
 </body>
 
 </html>
