@@ -8,7 +8,6 @@ import {
   GraduationCap,
   Mail,
   MapPin,
-  Phone,
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
@@ -29,12 +28,6 @@ const contact = [
     value: "chrisdiasanta@gmail.com",
     href: "mailto:chrisdiasanta@gmail.com",
     icon: Mail,
-  },
-  {
-    label: "Phone",
-    value: "(757) 339-8084",
-    href: "tel:+17573398084",
-    icon: Phone,
   },
   {
     label: "Location",
@@ -87,15 +80,40 @@ const skillGroups = [
   },
   {
     title: "Languages",
-    skills: ["Java", "Scala", "Python", "TypeScript", "JavaScript", "SQL", "C#", "C++"],
+    skills: [
+      "Java",
+      "Scala",
+      "Python",
+      "TypeScript",
+      "JavaScript",
+      "SQL",
+      "C#",
+      "C++",
+    ],
   },
   {
     title: "Frameworks",
-    skills: ["Spring Boot", "Spring Data JPA", "Hibernate", "Vue.js", "React", "D3.js"],
+    skills: [
+      "Spring Boot",
+      "Spring Data JPA",
+      "Hibernate",
+      "Vue.js",
+      "React",
+      "D3.js",
+    ],
   },
   {
     title: "Data & DevOps",
-    skills: ["Apache Kafka", "Protocol Buffers", "Docker", "Maven", "Nginx", "Git", "Postman", "CI/CD"],
+    skills: [
+      "Apache Kafka",
+      "Protocol Buffers",
+      "Docker",
+      "Maven",
+      "Nginx",
+      "Git",
+      "Postman",
+      "CI/CD",
+    ],
   },
   {
     title: "Platforms",
@@ -123,7 +141,8 @@ const fadeUp = {
   animate: { opacity: 1, y: 0 },
 };
 
-const assetPath = (path: string) => `${process.env.NEXT_PUBLIC_BASE_PATH || ""}${path}`;
+const assetPath = (path: string) =>
+  `${process.env.NEXT_PUBLIC_BASE_PATH || ""}${path}`;
 
 export default function Home() {
   return (
@@ -145,7 +164,11 @@ export default function Home() {
             </a>
           </div>
           <Button asChild size="sm">
-            <a href={assetPath("/Diasanta_Resume.pdf")} target="_blank" rel="noreferrer">
+            <a
+              href={assetPath("/Diasanta_Resume.pdf")}
+              target="_blank"
+              rel="noreferrer"
+            >
               <Download />
               Resume
             </a>
@@ -153,14 +176,20 @@ export default function Home() {
         </nav>
       </header>
 
-      <section id="top" className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:py-16 lg:grid-cols-[1.08fr_0.92fr] lg:px-8 lg:py-20">
+      <section
+        id="top"
+        className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:py-16 lg:grid-cols-[1.08fr_0.92fr] lg:px-8 lg:py-20"
+      >
         <motion.div
           className="flex flex-col justify-center"
           initial="initial"
           animate="animate"
           transition={{ staggerChildren: 0.08 }}
         >
-          <motion.div variants={fadeUp} className="mb-5 flex flex-wrap items-center gap-3">
+          <motion.div
+            variants={fadeUp}
+            className="mb-5 flex flex-wrap items-center gap-3"
+          >
             <Badge className="bg-primary/10 text-primary hover:bg-primary/10">
               <ShieldCheck className="mr-1 size-3.5" />
               Active Secret Clearance
@@ -181,11 +210,15 @@ export default function Home() {
             variants={fadeUp}
             className="mt-6 max-w-2xl text-lg leading-8 text-muted-foreground sm:text-xl"
           >
-            Full-stack software engineer building Java/Spring services, React and Vue interfaces,
-            microservices, realtime streaming systems, and performance-critical data workflows.
+            Full-stack software engineer building Java/Spring services, React
+            and Vue interfaces, microservices, realtime streaming systems, and
+            performance-critical data workflows.
           </motion.p>
 
-          <motion.div variants={fadeUp} className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <motion.div
+            variants={fadeUp}
+            className="mt-8 flex flex-col gap-3 sm:flex-row"
+          >
             <Button asChild size="lg">
               <a href="mailto:chrisdiasanta@gmail.com">
                 <Mail />
@@ -266,7 +299,9 @@ export default function Home() {
               className="min-h-28 rounded-md bg-background p-5"
             >
               <p className="text-3xl font-black text-primary">{metric.value}</p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">{metric.label}</p>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                {metric.label}
+              </p>
             </motion.div>
           ))}
         </div>
@@ -274,8 +309,12 @@ export default function Home() {
 
       <section className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[0.65fr_1.35fr] lg:px-8">
         <div>
-          <p className="text-sm font-bold uppercase tracking-[0.18em] text-primary">Profile</p>
-          <h2 className="mt-3 text-3xl font-black tracking-normal">Engineering Focus</h2>
+          <p className="text-sm font-bold uppercase tracking-[0.18em] text-primary">
+            Profile
+          </p>
+          <h2 className="mt-3 text-3xl font-black tracking-normal">
+            Engineering Focus
+          </h2>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
           {highlights.map((highlight) => (
@@ -294,11 +333,18 @@ export default function Home() {
 
       <Separator className="mx-auto max-w-7xl" />
 
-      <section id="experience" className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+      <section
+        id="experience"
+        className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8"
+      >
         <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
           <div>
-            <p className="text-sm font-bold uppercase tracking-[0.18em] text-primary">Experience</p>
-            <h2 className="mt-3 text-3xl font-black tracking-normal">Mission Technologies, HII</h2>
+            <p className="text-sm font-bold uppercase tracking-[0.18em] text-primary">
+              Experience
+            </p>
+            <h2 className="mt-3 text-3xl font-black tracking-normal">
+              Mission Technologies, HII
+            </h2>
           </div>
           <div className="text-sm font-medium text-muted-foreground md:text-right">
             <p>Software Engineer</p>
@@ -317,7 +363,9 @@ export default function Home() {
             >
               <Card className="h-full">
                 <CardHeader className="pb-3">
-                  <CardDescription>Impact {String(index + 1).padStart(2, "0")}</CardDescription>
+                  <CardDescription>
+                    Impact {String(index + 1).padStart(2, "0")}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <p className="leading-7 text-muted-foreground">{bullet}</p>
@@ -331,8 +379,12 @@ export default function Home() {
       <section id="skills" className="border-y bg-card/55">
         <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
           <div className="mb-8 max-w-3xl">
-            <p className="text-sm font-bold uppercase tracking-[0.18em] text-primary">Skills</p>
-            <h2 className="mt-3 text-3xl font-black tracking-normal">Technical Stack</h2>
+            <p className="text-sm font-bold uppercase tracking-[0.18em] text-primary">
+              Skills
+            </p>
+            <h2 className="mt-3 text-3xl font-black tracking-normal">
+              Technical Stack
+            </h2>
           </div>
           <div className="grid gap-5 lg:grid-cols-5">
             {skillGroups.map((group) => (
@@ -342,7 +394,11 @@ export default function Home() {
                 </CardHeader>
                 <CardContent className="flex flex-wrap gap-2">
                   {group.skills.map((skill) => (
-                    <Badge key={skill} variant="secondary" className="bg-secondary/70">
+                    <Badge
+                      key={skill}
+                      variant="secondary"
+                      className="bg-secondary/70"
+                    >
                       {skill}
                     </Badge>
                   ))}
@@ -353,10 +409,17 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="education" className="mx-auto grid max-w-7xl gap-8 px-4 py-14 sm:px-6 lg:grid-cols-[0.55fr_1.45fr] lg:px-8">
+      <section
+        id="education"
+        className="mx-auto grid max-w-7xl gap-8 px-4 py-14 sm:px-6 lg:grid-cols-[0.55fr_1.45fr] lg:px-8"
+      >
         <div>
-          <p className="text-sm font-bold uppercase tracking-[0.18em] text-primary">Education</p>
-          <h2 className="mt-3 text-3xl font-black tracking-normal">Computer Science</h2>
+          <p className="text-sm font-bold uppercase tracking-[0.18em] text-primary">
+            Education
+          </p>
+          <h2 className="mt-3 text-3xl font-black tracking-normal">
+            Computer Science
+          </h2>
         </div>
         <div className="grid gap-4 md:grid-cols-2">
           {education.map((item) => (
@@ -368,7 +431,9 @@ export default function Home() {
               </CardHeader>
               <CardContent>
                 <p className="font-semibold">{item.detail}</p>
-                <p className="mt-2 text-sm text-muted-foreground">{item.date}</p>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  {item.date}
+                </p>
               </CardContent>
             </Card>
           ))}
@@ -379,7 +444,9 @@ export default function Home() {
         <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-8 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
           <div>
             <p className="font-bold">Christopher Diasanta</p>
-            <p className="mt-1 text-sm text-background/70">Software Engineer | Norfolk, VA</p>
+            <p className="mt-1 text-sm text-background/70">
+              Software Engineer | Norfolk, VA
+            </p>
           </div>
           <div className="flex flex-wrap gap-3">
             <Button asChild variant="secondary">
@@ -389,7 +456,11 @@ export default function Home() {
               </a>
             </Button>
             <Button asChild variant="secondary">
-              <a href={assetPath("/Diasanta_Resume.pdf")} target="_blank" rel="noreferrer">
+              <a
+                href={assetPath("/Diasanta_Resume.pdf")}
+                target="_blank"
+                rel="noreferrer"
+              >
                 <Download />
                 PDF
               </a>
