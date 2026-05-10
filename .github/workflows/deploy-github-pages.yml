@@ -1,0 +1,52 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build static site
+        run: npm run build:pages
+        env:
+          DEPLOY_TARGET: github-pages
+          NEXT_PUBLIC_BASE_PATH: ""
+          NEXT_TELEMETRY_DISABLED: "1"
+
+      - name: Disable Jekyll
+        run: touch out/.nojekyll
+
+      - name: Deploy to GitHub Pages
+        uses: jamesives/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: out
+          token: ${{ secrets.GITHUB_TOKEN }}
+          clean: true
