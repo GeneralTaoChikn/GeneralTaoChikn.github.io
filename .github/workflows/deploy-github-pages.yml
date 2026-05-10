@@ -37,7 +37,7 @@ jobs:
         run: npm run build:pages
         env:
           DEPLOY_TARGET: github-pages
-          NEXT_PUBLIC_BASE_PATH: /
+          NEXT_PUBLIC_BASE_PATH: ""
           NEXT_TELEMETRY_DISABLED: "1"
 
       - name: Disable Jekyll
