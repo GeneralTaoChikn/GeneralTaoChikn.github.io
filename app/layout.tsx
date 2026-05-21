@@ -13,7 +13,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                const storedTheme = localStorage.getItem("theme");
+                const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+                const theme = storedTheme || (prefersDark ? "dark" : "light");
+                document.documentElement.classList.toggle("dark", theme === "dark");
+              } catch {
+                /* Ignore unavailable storage or media-query APIs. */
+              }
+            `,
+          }}
+        />
+      </head>
       <body className="min-h-screen bg-background font-sans antialiased">{children}</body>
     </html>
   );

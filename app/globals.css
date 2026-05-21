@@ -4,26 +4,54 @@
 
 @layer base {
   :root {
-    --background: 42 33% 97%;
-    --foreground: 215 28% 13%;
+    color-scheme: light;
+    --background: 214 45% 98%;
+    --foreground: 222 47% 11%;
     --card: 0 0% 100%;
-    --card-foreground: 215 28% 13%;
+    --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 215 28% 13%;
-    --primary: 171 76% 27%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 217 91% 48%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 205 44% 92%;
-    --secondary-foreground: 215 28% 13%;
-    --muted: 210 27% 94%;
-    --muted-foreground: 214 13% 42%;
-    --accent: 30 92% 58%;
-    --accent-foreground: 215 28% 13%;
+    --secondary: 214 65% 93%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 214 48% 94%;
+    --muted-foreground: 215 16% 43%;
+    --accent: 199 89% 48%;
+    --accent-foreground: 222 47% 11%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 210 19% 86%;
-    --input: 210 19% 86%;
-    --ring: 171 76% 27%;
+    --border: 214 32% 88%;
+    --input: 214 32% 88%;
+    --ring: 217 91% 48%;
+    --shell-mid: 212 64% 94%;
+    --shell-end: 218 55% 96%;
     --radius: 0.5rem;
+  }
+
+  .dark {
+    color-scheme: dark;
+    --background: 222 47% 8%;
+    --foreground: 213 31% 91%;
+    --card: 222 47% 11%;
+    --card-foreground: 213 31% 91%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 213 31% 91%;
+    --primary: 213 94% 68%;
+    --primary-foreground: 222 47% 8%;
+    --secondary: 217 33% 18%;
+    --secondary-foreground: 213 31% 91%;
+    --muted: 217 33% 16%;
+    --muted-foreground: 215 20% 72%;
+    --accent: 199 89% 58%;
+    --accent-foreground: 222 47% 8%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 217 33% 22%;
+    --input: 217 33% 22%;
+    --ring: 213 94% 68%;
+    --shell-mid: 221 45% 10%;
+    --shell-end: 224 54% 13%;
   }
 
   * {
@@ -42,6 +70,6 @@
 
   .resume-shell {
     background:
-      linear-gradient(180deg, hsl(var(--background)) 0%, #eef4f2 54%, #f7f2e8 100%);
+      linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--shell-mid)) 54%, hsl(var(--shell-end)) 100%);
   }
 }
