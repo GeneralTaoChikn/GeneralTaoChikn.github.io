@@ -290,7 +290,7 @@ export default function Home() {
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {experienceBullets.map((bullet, index) => (
             <motion.div
-              key={bullet}
+              key={index}
               initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
@@ -299,11 +299,12 @@ export default function Home() {
               <Card className="h-full">
                 <CardHeader className="pb-3">
                   <CardDescription>
-                    Impact {String(index + 1).padStart(2, "0")}
+                    {/*Impact {String(index + 1).padStart(2, "0")}: {bullet.title}*/}
+                    {bullet.title}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="leading-7 text-muted-foreground">{bullet}</p>
+                  <p className="leading-7 text-muted-foreground">{bullet.description}</p>
                 </CardContent>
               </Card>
             </motion.div>

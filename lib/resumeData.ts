@@ -55,16 +55,46 @@ export const highlights = [
 
 // 4. Experience Bullet Points
 export const experienceBullets = [
-  "Built and iterated R&D prototypes for a cloud-based simulation platform, integrating Kafka data pipelines, Java Spring services, WebSocket messaging, and Vue/Cesium visualization.",
-  "Refactored frontend and Spring backend modules in a 50,000+ line codebase, reducing complexity and improving application performance.",
-  "Designed RESTful APIs with Spring Boot and integrated them with Vue/React frontend components and external services.",
-  "Led a monolith-to-microservices migration by defining service boundaries and extracting services while maintaining feature parity.",
-  "Built and deployed features in a Dockerized microservices architecture, improving modularity and scalability across multiple services.",
-  "Remediated security vulnerabilities by upgrading application dependencies and resolving CVE findings while maintaining build stability and compatibility.",
-  "Migrated the persistence layer to Spring Data JPA/Hibernate, reducing query complexity, improving endpoint latency by 200%, and cutting database load through batching and caching.",
-  "Supported four live customer-facing product demonstrations by troubleshooting real-time technical issues and translating platform capabilities into clear technical value.",
-  "Built distributed data pipelines and real-time streaming services for a cloud-based Monte Carlo simulation platform, scaling concurrent entity support from about 100 to about 2,000.",
-  "Improved scalability of a Java Spring Kafka/WebSocket backend for a Vue.js/Cesium real-time mapping application, reducing CPU utilization from about 100% to about 25%.",
+  {
+    title: "Simulation Platform Development",
+    description: "Built and iterated R&D prototypes for a cloud-based simulation platform, integrating Kafka data pipelines, Java Spring services, WebSocket messaging, and Vue/Cesium visualization.",
+  },
+  {
+    title: "Codebase Refactoring",
+    description: "Refactored frontend and Spring backend modules in a 50,000+ line codebase, reducing complexity and improving application performance.",
+  },
+  {
+    title: "API Design & Integration",
+    description: "Designed RESTful APIs with Spring Boot and integrated them with Vue/React frontend components and external services.",
+  },
+  {
+    title: "Microservices Migration",
+    description: "Led a monolith-to-microservices migration by defining service boundaries and extracting services while maintaining feature parity.",
+  },
+  {
+    title: "Dockerized Microservices Deployment",
+    description: "Built and deployed features in a Dockerized microservices architecture, improving modularity and scalability across multiple services.",
+  },
+  {
+    title: "Security Remediation",
+    description: "Remediated security vulnerabilities by upgrading application dependencies and resolving CVE findings while maintaining build stability and compatibility.",
+  },
+  {
+    title: "Persistence Layer Optimization",
+    description: "Migrated the persistence layer to Spring Data JPA/Hibernate, reducing query complexity, improving endpoint latency by 200%, and cutting database load through batching and caching.",
+  },
+  {
+    title: "Customer Demonstration Support",
+    description: "Supported four live customer-facing product demonstrations by troubleshooting real-time technical issues and translating platform capabilities into clear technical value.",
+  },
+  {
+    title: "Data Pipeline & Simulation Scaling",
+    description: "Built distributed data pipelines and real-time streaming services for a cloud-based Monte Carlo simulation platform, scaling concurrent entity support from about 100 to about 2,000.",
+  },
+  {
+    title: "Real-time Mapping Performance Improvement",
+    description: "Improved scalability of a Java Spring Kafka/WebSocket backend for a Vue.js/Cesium real-time mapping application, reducing CPU utilization from about 100% to about 25%.",
+  },
 ];
 
 // 5. Skill Groups
