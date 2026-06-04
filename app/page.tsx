@@ -91,16 +91,15 @@ export default function Home() {
             >
               {theme === "dark" ? <Sun /> : <Moon />}
             </Button>
-            <Button asChild size="sm">
-              <a
-                href={assetPath("/Diasanta_Resume.pdf")}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <Download />
-                Resume
-              </a>
-            </Button>
+            <a
+              href={assetPath("/Diasanta_Resume.pdf")}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition"
+            >
+              <Download className="size-4" />
+              Resume
+            </a>
           </div>
         </nav>
       </header>
