@@ -217,7 +217,7 @@ export default function Home() {
         </motion.aside>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 pb-8 sm:px-6 lg:px-8">
+      {/* <section className="mx-auto max-w-7xl px-4 pb-8 sm:px-6 lg:px-8">
         <div className="grid gap-3 rounded-lg border bg-card/80 p-3 shadow-sm sm:grid-cols-2 lg:grid-cols-4">
           {metrics.map((metric) => (
             <motion.div
@@ -234,7 +234,7 @@ export default function Home() {
             </motion.div>
           ))}
         </div>
-      </section>
+      </section> */}
 
       <section className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[0.65fr_1.35fr] lg:px-8">
         <div>
