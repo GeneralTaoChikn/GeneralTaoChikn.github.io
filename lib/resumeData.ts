@@ -23,14 +23,19 @@ export const contact = [
     href: "https://www.linkedin.com/in/christopher-diasanta-7a210b1a9",
     icon: Linkedin,
   },
+  {
+    label: "Website",
+    value: "chris.diasanta.com",
+    href: "https://chris.diasanta.com",
+    icon: Globe,
+  },
 ];
 
 // 2. Achievements/Metrics
 export const metrics = [
-  { value: "50K+", label: "line enterprise codebase" },
-  { value: "20x", label: "simulation entity scale-up" },
+  { value: "100x", label: "simulation entity scale-up" },
   { value: "75%", label: "CPU utilization reduction" },
-  { value: "200%", label: "endpoint latency improvement" },
+  { value: "4", label: "live customer demonstrations" },
 ];
 
 // 3. Professional Highlights/Focus Areas
@@ -57,43 +62,35 @@ export const highlights = [
 export const experienceBullets = [
   {
     title: "Simulation Platform Development",
-    description: "Built and iterated R&D prototypes for a cloud-based simulation platform, integrating Kafka data pipelines, Java Spring services, WebSocket messaging, and Vue/Cesium visualization.",
-  },
-  {
-    title: "Codebase Refactoring",
-    description: "Refactored frontend and Spring backend modules in a 50,000+ line codebase, reducing complexity and improving application performance.",
+    description: "Built and iterated R&D prototypes for a cloud-based simulation platform, integrating Kafka-based data pipelines, Java Spring services, WebSocket messaging, and Vue/Cesium visualization to validate real-time system capabilities.",
   },
   {
     title: "API Design & Integration",
-    description: "Designed RESTful APIs with Spring Boot and integrated them with Vue/React frontend components and external services.",
+    description: "Designed and implemented RESTful APIs using Spring Boot, integrating with Vue/React frontend components and external services.",
   },
   {
     title: "Microservices Migration",
     description: "Led a monolith-to-microservices migration by defining service boundaries and extracting services while maintaining feature parity.",
   },
   {
-    title: "Dockerized Microservices Deployment",
-    description: "Built and deployed features in a Dockerized microservices architecture, improving modularity and scalability across multiple services.",
-  },
-  {
     title: "Security Remediation",
-    description: "Remediated security vulnerabilities by upgrading application dependencies and resolving CVE findings while maintaining build stability and compatibility.",
+    description: "Remediated security vulnerabilities by upgrading application dependencies and resolving CVE findings, reducing security exposure while maintaining build stability and compatibility.",
   },
   {
     title: "Persistence Layer Optimization",
-    description: "Migrated the persistence layer to Spring Data JPA/Hibernate, reducing query complexity, improving endpoint latency by 200%, and cutting database load through batching and caching.",
+    description: "Migrated an application persistence layer to Spring Data JPA/Hibernate, reducing query complexity and improving endpoint performance through batching, caching, and optimized database access patterns.",
   },
   {
     title: "Customer Demonstration Support",
-    description: "Supported four live customer-facing product demonstrations by troubleshooting real-time technical issues and translating platform capabilities into clear technical value.",
+    description: "Supported four live customer-facing product demonstrations by troubleshooting real-time technical issues and partnering with Sales and Product Management to translate platform capabilities into clear technical value for prospective customers.",
   },
   {
     title: "Data Pipeline & Simulation Scaling",
-    description: "Built distributed data pipelines and real-time streaming services for a cloud-based Monte Carlo simulation platform, scaling concurrent entity support from about 100 to about 2,000.",
+    description: "Built distributed data pipelines and real-time streaming services for a cloud-based Monte Carlo simulation platform, scaling concurrent entity support from about 100 to about 10,000—a 100× increase—while reducing processing latency and improving simulation throughput.",
   },
   {
     title: "Real-time Mapping Performance Improvement",
-    description: "Improved scalability of a Java Spring Kafka/WebSocket backend for a Vue.js/Cesium real-time mapping application, reducing CPU utilization from about 100% to about 25%.",
+    description: "Improved scalability of a Java Spring Kafka/WebSocket backend for a Vue.js/Cesium real-time mapping application by optimizing concurrent message processing, reducing CPU utilization from about 100% to about 25% and lowering infrastructure resource demand.",
   },
 ];
 
@@ -106,11 +103,12 @@ export const skillGroups = [
       "REST APIs",
       "WebSockets",
       "Distributed Systems",
-      "Data Structures & Algorithms",
-      "OOP",
       "Full-Stack Web Development",
       "SPA Applications",
       "SQL Databases",
+      "Event-Driven Architecture",
+      "Concurrent Processing",
+      "Performance Optimization",
     ],
   },
   {
@@ -132,20 +130,20 @@ export const skillGroups = [
     ],
   },
   {
-    title: "Backend & Data",
+    title: "Backend",
     skills: [
       "Spring Boot",
       "Spring Data JPA",
       "Apache Kafka",
       "Protocol Buffers",
-      "PostgreSQL",
-      "SQLite",
-      "Kafka Streams API",
-      "RocksDB",
     ],
   },
   {
-    title: "DevOps & AI",
+    title: "Database",
+    skills: ["PostgreSQL", "SQLite", "RocksDB"],
+  },
+  {
+    title: "DevOps / Tools",
     skills: [
       "Docker",
       "Maven",
@@ -155,15 +153,11 @@ export const skillGroups = [
       "Playwright",
       "CI/CD",
       "YAML Pipeline",
-      "Continue.dev",
-      "GPT Codex",
-      "GitHub Copilot",
-      "CLine",
     ],
   },
   {
-    title: "Platforms",
-    skills: ["Linux", "RHEL", "Ubuntu", "WSL", "Windows"],
+    title: "AI-Assisted Development",
+    skills: ["Local LLMs via Continue.dev", "GPT Codex", "GitHub Copilot", "Cline"],
   },
 ];
 
