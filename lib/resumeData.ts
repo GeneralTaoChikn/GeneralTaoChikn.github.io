@@ -2,6 +2,17 @@
 
 import { Globe, Linkedin, Mail, MapPin, Phone } from "lucide-react";
 
+export const profile = {
+  name: "Christopher Diasanta",
+  role: "Software Engineer II",
+  company: "Mission Technologies, a division of HII",
+  location: "Virginia Beach, VA",
+  clearance: "Active Secret clearance",
+  opportunities: "Open to backend, platform, and software engineering roles",
+  history:
+    "Software Engineer II: Apr 2025–Present. Software Engineer I: Sep 2021–Apr 2025. Remote, Virginia.",
+};
+
 // 1. Contact Information
 export const contact = [
   {
@@ -62,35 +73,43 @@ export const highlights = [
 export const experienceBullets = [
   {
     title: "Simulation Platform Development",
-    description: "Built and iterated R&D prototypes for a cloud-based simulation platform, integrating Kafka-based data pipelines, Java Spring services, WebSocket messaging, and Vue/Cesium visualization to validate real-time system capabilities.",
+    description:
+      "Built and iterated R&D prototypes for a cloud-based simulation platform, integrating Kafka-based data pipelines, Java Spring services, WebSocket messaging, and Vue/Cesium visualization to validate real-time system capabilities.",
   },
   {
     title: "API Design & Integration",
-    description: "Designed and implemented RESTful APIs using Spring Boot, integrating with Vue/React frontend components and external services.",
+    description:
+      "Designed and implemented RESTful APIs using Spring Boot, integrating with Vue/React frontend components and external services.",
   },
   {
     title: "Microservices Migration",
-    description: "Led a monolith-to-microservices migration by defining service boundaries and extracting services while maintaining feature parity.",
+    description:
+      "Led a monolith-to-microservices migration by defining service boundaries and extracting services while maintaining feature parity.",
   },
   {
     title: "Security Remediation",
-    description: "Remediated security vulnerabilities by upgrading application dependencies and resolving CVE findings, reducing security exposure while maintaining build stability and compatibility.",
+    description:
+      "Remediated security vulnerabilities by upgrading application dependencies and resolving CVE findings, reducing security exposure while maintaining build stability and compatibility.",
   },
   {
     title: "Persistence Layer Optimization",
-    description: "Migrated an application persistence layer to Spring Data JPA/Hibernate, reducing query complexity and improving endpoint performance through batching, caching, and optimized database access patterns.",
+    description:
+      "Migrated an application persistence layer to Spring Data JPA/Hibernate, reducing query complexity and improving endpoint performance through batching, caching, and optimized database access patterns.",
   },
   {
     title: "Customer Demonstration Support",
-    description: "Supported four live customer-facing product demonstrations by troubleshooting real-time technical issues and partnering with Sales and Product Management to translate platform capabilities into clear technical value for prospective customers.",
+    description:
+      "Supported four live customer-facing product demonstrations by troubleshooting real-time technical issues and partnering with Sales and Product Management to translate platform capabilities into clear technical value for prospective customers.",
   },
   {
     title: "Data Pipeline & Simulation Scaling",
-    description: "Built distributed data pipelines and real-time streaming services for a cloud-based Monte Carlo simulation platform, scaling concurrent entity support from about 100 to about 10,000—a 100× increase—while reducing processing latency and improving simulation throughput.",
+    description:
+      "Built distributed data pipelines and real-time streaming services for a cloud-based Monte Carlo simulation platform, scaling concurrent entity support from about 100 to about 10,000—a 100× increase—while reducing processing latency and improving simulation throughput.",
   },
   {
     title: "Real-time Mapping Performance Improvement",
-    description: "Improved scalability of a Java Spring Kafka/WebSocket backend for a Vue.js/Cesium real-time mapping application by optimizing concurrent message processing, reducing CPU utilization from about 100% to about 25% and lowering infrastructure resource demand.",
+    description:
+      "Improved scalability of a Java Spring Kafka/WebSocket backend for a Vue.js/Cesium real-time mapping application by optimizing concurrent message processing, reducing CPU utilization from about 100% to about 25% and lowering infrastructure resource demand.",
   },
 ];
 
@@ -157,7 +176,12 @@ export const skillGroups = [
   },
   {
     title: "AI-Assisted Development",
-    skills: ["Local LLMs via Continue.dev", "GPT Codex", "GitHub Copilot", "Cline"],
+    skills: [
+      "Local LLMs via Continue.dev",
+      "GPT Codex",
+      "GitHub Copilot",
+      "Cline",
+    ],
   },
 ];
 
@@ -174,5 +198,33 @@ export const education = [
     detail: "Associate of Science in Computer Science",
     date: "May 2018",
     location: "Norfolk, VA",
+  },
+];
+
+export const hobbies = [
+  {
+    name: "Travel",
+    note: "New places, good food, different perspectives.",
+    image: "/hobby-travel.png",
+  },
+  {
+    name: "Cars",
+    note: "Design, engineering, and the joy of the drive.",
+    image: "/hobby-cars.png",
+  },
+  {
+    name: "Photography",
+    note: "Finding the frame in everyday moments.",
+    image: "/hobby-photography.png",
+  },
+  {
+    name: "Fitness",
+    note: "Consistency, challenge, and a clear head.",
+    image: "/hobby-fitness.png",
+  },
+  {
+    name: "Technology",
+    note: "Always curious about what comes next.",
+    image: "/hobby-technology.png",
   },
 ];

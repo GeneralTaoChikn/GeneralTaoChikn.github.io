@@ -39,3 +39,17 @@ To reproduce the browser checks while the temporary tooling remains available, s
 ```bash
 PLAYWRIGHT_BROWSERS_PATH=/tmp/portfolio-browsers node /tmp/portfolio-qa/check.cjs
 ```
+
+## Browser résumé chat
+
+- Static export includes the homepage and separate worker chunks. The model is not requested during initial page load.
+- `npm test`: six retrieval/context tests pass (education, performance, missing facts, follow-ups, bounded history, and prompt roles).
+- Real Chromium inference on the WASM CPU path loaded the pinned SmolLM2 model and answered:
+  - “Where did Chris study?” → Old Dominion University.
+  - “How has Chris improved performance?” → concurrent message processing and CPU utilization from approximately 100% to 25%.
+  - “What is his salary?” → the résumé does not provide that information (deterministic fallback).
+- Browser UI checks with a simulated worker passed for suggestions, streaming, expandable source excerpts, stopping, clearing chat, error handling, explicit CPU retry, and whitespace-only questions.
+- No horizontal overflow at 320, 390, 768, 1024, 1200, and 1440 CSS pixels.
+- Mobile light and dark Axe WCAG A/AA checks reported zero violations in the tested chat state.
+- WebGPU device execution was not available in this verification environment; actual inference was verified with WASM, and the GPU/CPU selection and retry paths were reviewed in code.
+- Temporary checks: `/tmp/portfolio-qa/chat-real.cjs` (real model) and `/tmp/portfolio-qa/chat-ui.cjs` (simulated worker). Screenshots: `/tmp/resume-chat-idle.png`, `/tmp/resume-chat-answer.png`, `/tmp/resume-chat-mobile.png`.

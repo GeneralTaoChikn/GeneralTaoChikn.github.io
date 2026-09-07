@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import ResumeChat from "@/components/resume-chat/resume-chat";
 import { useEffect, useState } from "react";
 import {
   Badge,
@@ -37,6 +38,8 @@ import {
   education,
   experienceBullets,
   skillGroups,
+  profile,
+  hobbies,
 } from "@/lib/resumeData";
 
 const assetPath = (path: string) =>
@@ -47,6 +50,7 @@ const navigation = [
   { id: "work", label: "Selected work" },
   { id: "skills", label: "Skills" },
   { id: "hobbies", label: "Beyond work" },
+  { id: "chat", label: "Ask my résumé" },
   { id: "contact", label: "Contact" },
 ];
 const achievements = [
@@ -106,33 +110,6 @@ const skillIcons: Record<string, LucideIcon> = {
   "DevOps / Tools": Cloud,
   "AI-Assisted Development": Sparkles,
 };
-const hobbies = [
-  {
-    name: "Travel",
-    note: "New places, good food, different perspectives.",
-    image: "/hobby-travel.png",
-  },
-  {
-    name: "Cars",
-    note: "Design, engineering, and the joy of the drive.",
-    image: "/hobby-cars.png",
-  },
-  {
-    name: "Photography",
-    note: "Finding the frame in everyday moments.",
-    image: "/hobby-photography.png",
-  },
-  {
-    name: "Fitness",
-    note: "Consistency, challenge, and a clear head.",
-    image: "/hobby-fitness.png",
-  },
-  {
-    name: "Technology",
-    note: "Always curious about what comes next.",
-    image: "/hobby-technology.png",
-  },
-];
 
 function SectionHeading({
   number,
@@ -213,7 +190,7 @@ export default function Home() {
               cd<span>.</span>
             </span>
             <span className="identity-copy">
-              <strong>Christopher Diasanta</strong>
+              <strong>{profile.name}</strong>
               <span>Software Engineer</span>
             </span>
           </a>
@@ -305,11 +282,11 @@ export default function Home() {
             <div className="hero-meta">
               <span>
                 <MapPin />
-                Virginia Beach, VA
+                {profile.location}
               </span>
               <span>
                 <ShieldCheck />
-                Active Secret clearance
+                {profile.clearance}
               </span>
             </div>
             <div className="hero-actions">
@@ -335,7 +312,7 @@ export default function Home() {
             <div className="portrait-frame">
               <Image
                 src={assetPath("/profile-picture.png")}
-                alt="Christopher Diasanta"
+                alt={profile.name}
                 fill
                 priority
                 sizes="(max-width: 700px) 85vw, 340px"
@@ -343,7 +320,7 @@ export default function Home() {
             </div>
             <div className="profile-caption">
               <div>
-                <strong>Christopher Diasanta</strong>
+                <strong>{profile.name}</strong>
                 <span>Software Engineer II · HII</span>
               </div>
               <span className="profile-icon">
@@ -390,8 +367,8 @@ export default function Home() {
               <div className="job-heading">
                 <span className="company-mark">HII</span>
                 <div>
-                  <h3>Software Engineer II</h3>
-                  <p>Mission Technologies, a division of HII</p>
+                  <h3>{profile.role}</h3>
+                  <p>{profile.company}</p>
                 </div>
                 <Badge color="green" variant="soft">
                   Current
@@ -466,9 +443,7 @@ export default function Home() {
               <Card size="3" className="opportunity-card">
                 <ShieldCheck />
                 <h3>Ready for the next challenge.</h3>
-                <p>
-                  Open to backend, platform, and software engineering roles.
-                </p>
+                <p>{profile.opportunities}.</p>
                 <Button asChild variant="soft">
                   <a href="mailto:chrisdiasanta@gmail.com">
                     Start a conversation
@@ -543,7 +518,11 @@ export default function Home() {
           </Card>
         </section>
 
-        <section className="content-section" aria-label="Education">
+        <section
+          id="education"
+          className="content-section"
+          aria-label="Education"
+        >
           <SectionHeading number="04" title="Education" />
           <div className="education-grid">
             {education.map((item) => (
@@ -589,6 +568,8 @@ export default function Home() {
             ))}
           </div>
         </section>
+
+        <ResumeChat />
 
         <section
           id="contact"
