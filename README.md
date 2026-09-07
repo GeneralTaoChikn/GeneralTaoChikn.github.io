@@ -1,6 +1,14 @@
 # Christopher Diasanta Resume Site
 
-A one-page resume website built with Next.js, TypeScript, Tailwind CSS, local shadcn/ui-style components, and Framer Motion.
+A one-page resume website built with Next.js, TypeScript, Radix Themes, and Lucide icons.
+
+## Design system
+
+The portfolio uses Radix Themes for cards, buttons, badges, and the accessible mobile navigation menu. The root theme in `app/layout.tsx` defines the indigo accent, slate neutrals, and rounded corners. `app/globals.css` defines responsive layouts and typography; Tailwind remains available for utilities and legacy local components.
+
+Light and dark appearances follow the system preference on first visit. The header toggle saves a preference when browser storage is available. Reduced-motion preferences, visible keyboard focus, and a skip link are supported.
+
+Résumé content lives in `lib/resumeData.ts`, with selected-work summaries and personal interests in `app/page.tsx`. Keep metrics grounded in the résumé when editing. The résumé buttons download `public/Diasanta_Resume.pdf`.
 
 ## Getting Started
 

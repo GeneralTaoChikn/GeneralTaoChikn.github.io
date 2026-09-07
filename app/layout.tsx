@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Theme } from "@radix-ui/themes";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -21,7 +22,8 @@ export default function RootLayout({
               try {
                 const storedTheme = localStorage.getItem("theme");
                 const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-                const theme = storedTheme || (prefersDark ? "dark" : "light");
+                const theme = storedTheme === "dark" || storedTheme === "light"
+                  ? storedTheme : (prefersDark ? "dark" : "light");
                 document.documentElement.classList.toggle("dark", theme === "dark");
               } catch {
                 /* Ignore unavailable storage or media-query APIs. */
@@ -30,7 +32,16 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen bg-background font-sans antialiased">{children}</body>
+      <body>
+        <Theme
+          accentColor="indigo"
+          grayColor="slate"
+          radius="large"
+          panelBackground="solid"
+        >
+          {children}
+        </Theme>
+      </body>
     </html>
   );
 }

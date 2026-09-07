@@ -1,36 +1,41 @@
-**Design QA**
+# Portfolio design verification
 
-- Source visual truth: screenshot attached in the user request (editorial software-engineer résumé layout).
-- Implementation: local Next.js page in `app/page.tsx` and `app/globals.css`.
-- Intended viewport: desktop reference at approximately 1488 × 1056 CSS pixels; responsive mobile state at ≤700 CSS pixels.
-- State: light theme reference; implementation includes light and dark theme states.
-- Source pixels: attachment dimensions shown as 1488 × 1056.
-- Implementation pixels, density, and screenshot path: unavailable because this session has no approved browser/capture surface.
+Verified September 7, 2026 against the production GitHub Pages export.
 
-**Findings**
+## Design system
 
-- Browser-rendered evidence is unavailable. Production compilation and type checking pass, but those checks do not establish visual fidelity.
-- Full-view comparison: blocked; no implementation screenshot could be captured and placed beside the reference.
-- Focused-region comparison: blocked for the same reason.
-- Fonts and typography: code-level review only; Arial/Helvetica system sans with monospaced metadata approximates the reference hierarchy.
-- Spacing and layout rhythm: code-level review only; wide desktop grid, thin section rules, compact rows, and mobile breakpoints are implemented.
-- Colors and visual tokens: cobalt accent, warm paper light surface, and deep neutral dark theme are implemented as reusable tokens.
-- Image quality and asset fidelity: the supplied profile image is used in a circular masked crop; browser sharpness and crop remain unverified.
-- Copy and content: reference placeholders were replaced with the repository’s existing résumé details and metrics.
+- Radix Themes 3.3 supplies the shared theme, cards, buttons, badges, icon buttons, and mobile dropdown navigation.
+- Indigo accents, slate neutrals, consistent Lucide stroke icons, and rounded surfaces establish the visual language.
+- Career impact, résumé download, and contact actions are prominent. All eight experience contributions remain available through the expandable experience section.
+- The existing profile portrait, hobby images, résumé, contact details, and education are retained.
+- Radix styles are imported through `app/globals.css` before application overrides to keep production stylesheet ordering predictable.
 
-**Open Questions**
+## Verification results
 
-- None about implementation intent. Browser capture remains the only verification blocker.
+- `DEPLOY_TARGET=github-pages npm run build`: passed compilation, type validation, and static export.
+- Chromium overflow checks: passed at 320, 390, 768, 1024, and 1440 CSS pixels.
+- Desktop and mobile screenshots reviewed for hierarchy, wrapping, portrait placement, and responsive spacing.
+- Theme toggle, persistence after reload, and toggling with unavailable local storage: passed.
+- Experience expansion: all eight contributions visible after opening.
+- Desktop section navigation updates `aria-current` as the page scrolls.
+- Mobile menu opens, navigates to Skills, closes after selection, and restores trigger focus on Escape.
+- Résumé action downloads `Diasanta_Resume.pdf`.
+- No browser runtime errors during interaction checks.
+- Axe WCAG 2 A/AA and WCAG 2.1 AA checks: zero reported violations on desktop light, desktop dark, and mobile light states. Automated checks do not replace a manual screen-reader assessment.
 
-**Implementation Checklist**
+## Local review artifacts
 
-- Capture desktop light mode at 1488 × 1056.
-- Capture desktop dark mode and a mobile viewport.
-- Test theme persistence, anchor navigation, email, LinkedIn, and résumé download.
-- Compare the light desktop capture side-by-side with the supplied reference and resolve any P0/P1/P2 drift.
+Temporary verification tooling is in `/tmp/portfolio-qa`; it is not a project dependency.
 
-**Follow-up Polish**
+- `/tmp/portfolio-desktop-light.png`
+- `/tmp/portfolio-desktop-dark.png`
+- `/tmp/portfolio-mobile-light.png`
+- `/tmp/portfolio-mobile-dark.png`
+- `/tmp/portfolio-desktop-detail.png`
+- `/tmp/portfolio-mobile-detail.png`
 
-- Fine-tune portrait crop and headline wrapping after browser evidence is available.
+To reproduce the browser checks while the temporary tooling remains available, serve `out` on localhost port 3100, then run:
 
-final result: blocked
+```bash
+PLAYWRIGHT_BROWSERS_PATH=/tmp/portfolio-browsers node /tmp/portfolio-qa/check.cjs
+```
