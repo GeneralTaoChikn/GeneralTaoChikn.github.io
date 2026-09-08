@@ -12,18 +12,16 @@ Résumé content and personal interests live in `lib/resumeData.ts`, with select
 
 ## Browser résumé assistant
 
-The “Ask my résumé” section uses `@huggingface/transformers` entirely in a Web Worker. It needs no API key, inference server, or Next.js API route and works with the GitHub Pages static export.
+The “Ask my résumé” section searches the shared portfolio data locally and displays matching résumé excerpts with section links. It does not generate answers or download an AI model, and works with the GitHub Pages static export.
 
-- **Model:** [SmolLM2-360M-Instruct](https://huggingface.co/HuggingFaceTB/SmolLM2-360M-Instruct), Apache-2.0, `q4` ONNX weights, pinned to revision `a10cc1512eabd3dde888204e902eca88bddb4951` in `components/resume-chat/chat.worker.ts`. The initial model download is approximately 400 MB, plus the inference runtime.
-- **Loading:** No worker or model download begins until the visitor selects Start assistant. Model files come from Hugging Face; Transformers.js resolves its versioned WASM runtime from jsDelivr. Browser Cache Storage is used when available. Downloads require a connection; cache availability depends on browser storage policy.
-- **Execution:** WebGPU is preferred when an adapter is available, with a single-threaded WASM CPU fallback. CPU inference can be slow on phones or older devices. HTTPS or localhost is recommended for browser capabilities. No cross-origin isolation headers or SharedArrayBuffer are required.
-- **Grounding:** `lib/resume-chat-context.ts` ranks relevant excerpts from the shared résumé data and adds them to the model prompt. Unknown topics receive a fixed fallback. Generated answers include the actual context excerpts and section links, but a small model can still make mistakes; these links are context, not proof that every generated claim is correct.
-- **Privacy:** Questions and conversation history stay in browser memory and are never submitted to an inference service. The download hosts receive ordinary asset requests. Clear chat clears the visible conversation, not cached model files. Reloading the page clears the conversation. Stop and Cancel terminate the worker; restarting reuses cached files when available.
-- **Bounds:** Questions are limited to 500 characters, model history to six turns (starting with a user turn), and responses to 160 new tokens. Loading and generation have timeouts with recovery actions.
+- **Results:** `lib/resume-chat-context.ts` ranks excerpts by keyword and alias matches, then returns up to three. Experience descriptions come directly from `lib/resumeData.ts`; structured profile, skill, education, and contact fields use fixed formatting. No model rewrites or invents résumé claims.
+- **Matching:** Short follow-ups can reuse the previous question. Results are labeled as related excerpts, not assertions that the question’s premise is true. Search may miss paraphrases or return a related excerpt that does not fully answer the question. No matches produce a fixed fallback with a contact suggestion.
+- **Privacy and loading:** Search is ready immediately. Questions and history stay in browser memory; no inference service, model host, worker, API key, or account is involved. Clear chat removes the conversation; reloading also clears it.
+- **Bounds:** Search questions and previous-question context are limited to 500 characters.
 
-`components/resume-chat/resume-chat.tsx` owns the chat interface and worker lifecycle; `lib/resume-chat-types.ts` defines their message protocol. Update résumé facts in `lib/resumeData.ts`; update site implementation facts in the context module if the stack changes.
+`components/resume-chat/resume-chat.tsx` owns the search interface and conversation display. Update résumé facts in `lib/resumeData.ts`; update site implementation facts in the context module if the stack changes.
 
-Run retrieval and context tests with `npm test`. Build the static deployment with `DEPLOY_TARGET=github-pages npm run build`.
+Run retrieval tests with `npm test`. Build the static deployment with `DEPLOY_TARGET=github-pages npm run build`.
 
 ## Getting Started
 

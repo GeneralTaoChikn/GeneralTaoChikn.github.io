@@ -11,7 +11,6 @@
     "test": "node --import tsx --test tests/*.test.ts"
   },
   "dependencies": {
-    "@huggingface/transformers": "^3.8.1",
     "@radix-ui/react-slot": "^1.1.2",
     "@radix-ui/themes": "^3.3.0",
     "class-variance-authority": "^0.7.1",

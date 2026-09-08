@@ -40,7 +40,17 @@ To reproduce the browser checks while the temporary tooling remains available, s
 PLAYWRIGHT_BROWSERS_PATH=/tmp/portfolio-browsers node /tmp/portfolio-qa/check.cjs
 ```
 
-## Browser résumé chat
+## Current résumé search
+
+- Replaced generated answers with directly displayed portfolio excerpts and section links.
+- Removed the model worker and Transformers.js dependency; search needs no model download.
+- `npm test`: passed retrieval checks for education, performance, missing facts, follow-ups, exact experience text, requests to invent facts, punctuation, and input bounds.
+- `DEPLOY_TARGET=github-pages npm run build`: passed compilation, type validation, and static export.
+- Browser interaction and visual checks were not rerun for this change.
+
+## Browser résumé chat (historical generative version)
+
+These checks describe the previous worker-based implementation. The current résumé search returns excerpts directly and requires fresh browser verification.
 
 - Static export includes the homepage and separate worker chunks. The model is not requested during initial page load.
 - `npm test`: six retrieval/context tests pass (education, performance, missing facts, follow-ups, bounded history, and prompt roles).

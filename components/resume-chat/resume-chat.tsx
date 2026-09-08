@@ -1,32 +1,26 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Badge, Button, Card, Progress, TextArea } from "@radix-ui/themes";
+import { Badge, Button, Card, TextArea } from "@radix-ui/themes";
 import {
   ArrowUpRight,
-  Bot,
-  Check,
-  Download,
   FileText,
-  LoaderCircle,
   LockKeyhole,
   MessageCircle,
+  Search,
   Send,
-  Square,
   Trash2,
 } from "lucide-react";
 import {
-  MAX_HISTORY_TURNS,
   MAX_QUESTION_LENGTH,
-  type ChatResponse,
+  UNKNOWN_ANSWER,
   type ChatTurn,
   type ResumeSource,
 } from "@/lib/resume-chat-types";
+import { retrieveSources } from "@/lib/resume-chat-context";
 
-type Status = "idle" | "loading" | "ready" | "generating" | "error";
 type Message = ChatTurn & {
   id: number;
-  complete: boolean;
   sources?: ResumeSource[];
 };
 const suggestions = [
@@ -38,161 +32,44 @@ const assetPath = (path: string) =>
   `${process.env.NEXT_PUBLIC_BASE_PATH || ""}${path}`;
 
 export default function ResumeChat() {
-  const [status, setStatus] = useState<Status>("idle");
-  const [device, setDevice] = useState<"webgpu" | "wasm">("wasm");
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
-  const [progress, setProgress] = useState<number>();
-  const [loadingLabel, setLoadingLabel] = useState("Preparing the assistant…");
-  const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
-  const worker = useRef<Worker | null>(null);
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const nextId = useRef(0);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const logRef = useRef<HTMLDivElement>(null);
   const followOutput = useRef(true);
 
-  const clearTimer = () => {
-    if (timer.current) clearTimeout(timer.current);
-    timer.current = null;
-  };
-  const releaseWorker = () => {
-    clearTimer();
-    worker.current?.terminate();
-    worker.current = null;
-  };
-  useEffect(
-    () => () => {
-      worker.current?.terminate();
-      if (timer.current) clearTimeout(timer.current);
-    },
-    [],
-  );
   useEffect(() => {
     if (followOutput.current && logRef.current)
       logRef.current.scrollTop = logRef.current.scrollHeight;
   }, [messages]);
 
-  const fail = (message: string) => {
-    releaseWorker();
-    setStatus("error");
-    setError(message);
-    setMessages((current) => current.filter((item) => item.complete));
-  };
-  const start = (cpuOnly = false) => {
-    releaseWorker();
-    setError("");
-    setNotice("");
-    setProgress(undefined);
-    setLoadingLabel("Preparing the assistant…");
-    setStatus("loading");
-    try {
-      const instance = new Worker(
-        new URL("./chat.worker.ts", import.meta.url),
-        { type: "module" },
-      );
-      worker.current = instance;
-      timer.current = setTimeout(
-        () =>
-          fail(
-            "The download is taking longer than expected. Check your connection and retry; completed model files may already be cached.",
-          ),
-        300_000,
-      );
-      instance.onmessage = ({ data }: MessageEvent<ChatResponse>) => {
-        if (worker.current !== instance) return;
-        if (data.type === "progress") {
-          setLoadingLabel(data.label);
-          setProgress(data.progress);
-        }
-        if (data.type === "ready") {
-          clearTimer();
-          setDevice(data.device);
-          setStatus("ready");
-          setNotice("Ready for your question.");
-        }
-        if (data.type === "token")
-          setMessages((current) =>
-            current.map((item) =>
-              item.id === data.id ? { ...item, content: data.text } : item,
-            ),
-          );
-        if (data.type === "complete") {
-          clearTimer();
-          setMessages((current) =>
-            current.map((item) =>
-              item.id === data.id
-                ? {
-                    ...item,
-                    content: data.text,
-                    complete: true,
-                    sources: data.sources,
-                  }
-                : item,
-            ),
-          );
-          setStatus("ready");
-          setNotice("Answer complete.");
-        }
-        if (data.type === "error") fail(data.message);
-      };
-      instance.onerror = () =>
-        fail(
-          "The assistant couldn’t start in this browser. Try again using CPU mode, or read the résumé directly.",
-        );
-      instance.onmessageerror = () =>
-        fail("The assistant connection was interrupted. Please restart it.");
-      instance.postMessage({ type: "load", cpuOnly });
-    } catch {
-      fail(
-        "This browser cannot start the assistant. You can still download the résumé or contact Chris.",
-      );
-    }
-  };
-
   const submit = () => {
-    const question = input.trim();
-    if (!question || status !== "ready" || !worker.current) return;
+    const question = input.trim().slice(0, MAX_QUESTION_LENGTH);
+    if (!question) return;
+    const previousQuestion = messages.findLast(
+      (message) => message.role === "user",
+    )?.content;
+    const sources = retrieveSources(question, previousQuestion);
     const user: Message = {
       id: ++nextId.current,
       role: "user",
-      content: question.slice(0, MAX_QUESTION_LENGTH),
-      complete: true,
+      content: question,
     };
     const answer: Message = {
       id: ++nextId.current,
       role: "assistant",
-      content: "",
-      complete: false,
+      content: sources.length ? "Related résumé excerpts:" : UNKNOWN_ANSWER,
+      sources,
     };
-    const history = [...messages.filter((item) => item.complete), user].slice(
-      -MAX_HISTORY_TURNS,
-    );
+    followOutput.current = true;
     setMessages((current) => [...current, user, answer]);
     setInput("");
-    setStatus("generating");
-    setNotice("Reading the résumé and preparing an answer…");
-    followOutput.current = true;
-    timer.current = setTimeout(
-      () =>
-        fail(
-          "This device is taking too long to answer. Try a shorter question after restarting the assistant.",
-        ),
-      180_000,
-    );
-    worker.current.postMessage({
-      type: "generate",
-      id: answer.id,
-      messages: history.map(({ role, content }) => ({ role, content })),
-    });
-  };
-  const stop = () => {
-    releaseWorker();
-    setStatus("idle");
-    setMessages((current) => current.filter((item) => item.complete));
     setNotice(
-      "Stopped. Start the assistant again to continue; cached files can be reused.",
+      sources.length
+        ? `${sources.length} résumé excerpts found.`
+        : "No matching résumé excerpts found.",
     );
   };
   const reset = () => {
@@ -201,7 +78,6 @@ export default function ResumeChat() {
     setNotice("Conversation cleared.");
     inputRef.current?.focus();
   };
-  const busy = status === "loading" || status === "generating";
 
   return (
     <section id="chat" className="content-section" aria-labelledby="chat-title">
@@ -210,7 +86,7 @@ export default function ResumeChat() {
           <span className="section-number">06</span>
           <h2 id="chat-title">Ask my résumé</h2>
         </div>
-        <p>A quick conversation about the experience behind the work.</p>
+        <p>Find experience, skills, and education in my résumé.</p>
       </div>
       <div className="resume-chat-layout">
         <aside className="chat-intro">
@@ -219,9 +95,9 @@ export default function ResumeChat() {
           </span>
           <h3>What would you like to know?</h3>
           <p>
-            Explore Chris’s skills, career, and education. Answers use
-            information from this portfolio, with résumé excerpts to check the
-            details.
+            Search Chris’s skills, career, and education. Results show existing
+            résumé text from this portfolio, with links to the relevant sections.
+            No answers are generated.
           </p>
           <div className="chat-privacy">
             <LockKeyhole />
@@ -243,83 +119,17 @@ export default function ResumeChat() {
           <div className="chat-header">
             <div>
               <span className="icon-tile">
-                <Bot />
+                <Search />
               </span>
               <div>
-                <h3>Résumé assistant</h3>
-                <span>Powered by Transformers.js</span>
+                <h3>Résumé search</h3>
+                <span>Excerpts from this portfolio</span>
               </div>
             </div>
-            <Badge
-              color={
-                status === "ready" || status === "generating" ? "green" : "gray"
-              }
-              variant="soft"
-            >
-              {status === "ready" || status === "generating"
-                ? "On-device"
-                : "Local AI"}
+            <Badge color="green" variant="soft">
+              On-device
             </Badge>
           </div>
-          {(status === "idle" ||
-            status === "error" ||
-            status === "loading") && (
-            <div className="chat-start">
-              <h4>
-                {status === "loading"
-                  ? "Getting things ready"
-                  : "Start a conversation, privately."}
-              </h4>
-              <p>
-                Starting downloads a small AI model (about 400 MB) from Hugging
-                Face, plus its runtime. Your browser caches files when possible.
-                The first load can take a few minutes.
-              </p>
-              {status === "loading" ? (
-                <>
-                  <div className="chat-download-status">
-                    <LoaderCircle className="chat-spinner" />
-                    <span>{loadingLabel}</span>
-                    {progress !== undefined && <span>{progress}%</span>}
-                  </div>
-                  <Progress
-                    aria-label="Current model file download"
-                    value={progress}
-                  />
-                  <Button
-                    type="button"
-                    variant="soft"
-                    color="gray"
-                    onClick={stop}
-                  >
-                    <Square />
-                    Cancel download
-                  </Button>
-                </>
-              ) : (
-                <div className="chat-start-actions">
-                  <Button type="button" onClick={() => start()}>
-                    <Download />
-                    {status === "error" ? "Try again" : "Start assistant"}
-                  </Button>
-                  {status === "error" && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => start(true)}
-                    >
-                      Try CPU mode
-                    </Button>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
-          {error && (
-            <p className="chat-error" role="alert">
-              {error}
-            </p>
-          )}
           <div
             className="chat-log"
             ref={logRef}
@@ -327,7 +137,6 @@ export default function ResumeChat() {
             aria-label="Résumé conversation"
             aria-live="polite"
             aria-relevant="additions text"
-            aria-busy={status === "generating"}
             tabIndex={0}
             onScroll={() => {
               const log = logRef.current;
@@ -338,7 +147,7 @@ export default function ResumeChat() {
           >
             {messages.length === 0 ? (
               <div className="chat-empty">
-                <Bot />
+                <Search />
                 <p>
                   Ask about backend experience, performance improvements, or the
                   tools Chris uses.
@@ -351,15 +160,11 @@ export default function ResumeChat() {
                   className={`chat-message chat-message-${message.role}`}
                 >
                   <span className="chat-message-label">
-                    {message.role === "user" ? "You" : "Résumé assistant"}
+                    {message.role === "user" ? "You" : "Résumé search"}
                   </span>
-                  <p>{message.content || "Reading the résumé…"}</p>
+                  <p>{message.content}</p>
                   {message.sources && message.sources.length > 0 && (
-                    <details className="chat-sources">
-                      <summary>
-                        <FileText />
-                        Résumé context used ({message.sources.length})
-                      </summary>
+                    <div className="chat-sources">
                       {message.sources.map((source, index) => (
                         <div key={`${source.title}-${index}`}>
                           <a href={source.href}>
@@ -369,7 +174,7 @@ export default function ResumeChat() {
                           <p>{source.text}</p>
                         </div>
                       ))}
-                    </details>
+                    </div>
                   )}
                 </div>
               ))
@@ -380,7 +185,6 @@ export default function ResumeChat() {
               <button
                 key={question}
                 type="button"
-                disabled={busy}
                 onClick={() => {
                   setInput(question);
                   inputRef.current?.focus();
@@ -421,53 +225,25 @@ export default function ResumeChat() {
             />
             <div className="chat-form-actions">
               <span id="chat-input-help">
-                {status === "idle" || status === "loading" || status === "error"
-                  ? "Start the assistant to send a question."
-                  : "Enter to send · Shift + Enter for a new line"}
+                Enter to search · Shift + Enter for a new line
               </span>
-              {status === "generating" ? (
-                <Button
-                  type="button"
-                  variant="soft"
-                  color="gray"
-                  onClick={stop}
-                >
-                  <Square />
-                  Stop
-                </Button>
-              ) : (
-                <Button
-                  type="submit"
-                  disabled={status !== "ready" || !input.trim()}
-                >
-                  <Send />
-                  Send
-                </Button>
-              )}
+              <Button type="submit" disabled={!input.trim()}>
+                <Send />
+                Search
+              </Button>
             </div>
           </form>
           <div className="chat-bottom">
             <span>
-              {status === "ready" || status === "generating" ? (
-                <>
-                  <Check />
-                  {device === "webgpu"
-                    ? "GPU accelerated"
-                    : "CPU mode · answers may take longer"}
-                </>
-              ) : (
-                <>
-                  <LockKeyhole />
-                  Runs in your browser
-                </>
-              )}
+              <LockKeyhole />
+              Runs locally · No model download
             </span>
             <Button
               type="button"
               size="1"
               variant="ghost"
               color="gray"
-              disabled={busy || messages.length === 0}
+              disabled={messages.length === 0}
               onClick={reset}
             >
               <Trash2 />
@@ -475,9 +251,9 @@ export default function ResumeChat() {
             </Button>
           </div>
           <p className="chat-disclaimer">
-            AI answers can be inaccurate. Check the résumé excerpts or{" "}
-            <a href="mailto:chrisdiasanta@gmail.com">ask Chris</a> to confirm
-            details.
+            Results are matching excerpts, and may not answer every part of your
+            question. For details the résumé doesn’t cover,{" "}
+            <a href="mailto:chrisdiasanta@gmail.com">ask Chris</a>.
           </p>
           <p className="sr-only" role="status">
             {notice}
