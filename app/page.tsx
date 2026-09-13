@@ -1,5 +1,7 @@
 "use client";
 
+import { resumeSourceId } from "@/lib/resume-source-id";
+
 import Image from "next/image";
 import ResumeChat from "@/components/resume-chat/resume-chat";
 import { useEffect, useRef, useState } from "react";
@@ -397,7 +399,11 @@ export default function Home() {
                 Backend services, streaming infrastructure, and visualization
                 for cloud simulation, including R&D prototypes.
               </p>
-              <div className="career-path">
+              <div
+                id="resume-career-history"
+                className="career-path resume-source"
+                tabIndex={-1}
+              >
                 <div>
                   <span className="timeline-dot" />
                   <strong>Software Engineer II</strong>
@@ -411,7 +417,12 @@ export default function Home() {
               </div>
               <ul className="experience-highlights">
                 {experienceBullets.slice(0, 3).map((item) => (
-                  <li key={item.title}>
+                  <li
+                    key={item.title}
+                    id={resumeSourceId("experience", item.title)}
+                    className="resume-source"
+                    tabIndex={-1}
+                  >
                     <Check />
                     <span>{item.description}</span>
                   </li>
@@ -424,7 +435,12 @@ export default function Home() {
                 </summary>
                 <ul className="experience-highlights">
                   {experienceBullets.slice(3).map((item) => (
-                    <li key={item.title}>
+                    <li
+                      key={item.title}
+                      id={resumeSourceId("experience", item.title)}
+                      className="resume-source"
+                      tabIndex={-1}
+                    >
                       <Check />
                       <span>{item.description}</span>
                     </li>
@@ -545,18 +561,14 @@ export default function Home() {
             </summary>
             <div className="additional-skills-grid">
               {skillGroups.map((group) => (
-                <div key={group.title}>
+                <div
+                  key={group.title}
+                  id={resumeSourceId("skills", group.title)}
+                  className="resume-source"
+                  tabIndex={-1}
+                >
                   <h3>{group.title}</h3>
-                  <p>
-                    {group.skills
-                      .filter(
-                        (skill) =>
-                          !primarySkillGroups.some((primary) =>
-                            primary.skills.includes(skill),
-                          ),
-                      )
-                      .join(" · ")}
-                  </p>
+                  <p>{group.skills.join(" · ")}</p>
                 </div>
               ))}
             </div>
@@ -572,7 +584,13 @@ export default function Home() {
           <SectionHeading number="04" title="Education" />
           <div className="education-grid">
             {education.map((item) => (
-              <Card key={item.school} size="3" className="education-card">
+              <Card
+                key={item.school}
+                id={resumeSourceId("education", item.school)}
+                tabIndex={-1}
+                size="3"
+                className="education-card resume-source"
+              >
                 <span className="icon-tile">
                   <GraduationCap />
                 </span>
@@ -613,7 +631,8 @@ export default function Home() {
         </section>
         <section
           id="hobbies"
-          className="interests-section"
+          tabIndex={-1}
+          className="interests-section resume-source"
           aria-labelledby="interests-title"
         >
           <h2 id="interests-title">Outside work</h2>
@@ -626,7 +645,12 @@ export default function Home() {
           <a href="#top" className="footer-name">
             Christopher Diasanta<span>Software Engineer</span>
           </a>
-          <nav aria-label="Contact links">
+          <nav
+            id="resume-contact-links"
+            className="resume-source"
+            tabIndex={-1}
+            aria-label="Contact links"
+          >
             {contact.map(({ icon: Icon, ...item }) => (
               <a
                 key={item.label}

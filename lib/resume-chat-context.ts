@@ -1,3 +1,4 @@
+import { resumeSourceId } from "./resume-source-id";
 import {
   contact,
   hobbies,
@@ -6,10 +7,7 @@ import {
   profile,
   skillGroups,
 } from "./resumeData";
-import {
-  MAX_QUESTION_LENGTH,
-  type ResumeSource,
-} from "./resume-chat-types";
+import { MAX_QUESTION_LENGTH, type ResumeSource } from "./resume-chat-types";
 
 // Build the knowledge from the same data displayed on the portfolio.
 const sources: ResumeSource[] = [
@@ -20,27 +18,27 @@ const sources: ResumeSource[] = [
   },
   {
     title: "Career history",
-    href: "#experience",
+    href: "#resume-career-history",
     text: `${profile.company}. ${profile.history}`,
   },
   ...experienceBullets.map((item) => ({
     title: item.title,
-    href: "#experience",
+    href: `#${resumeSourceId("experience", item.title)}`,
     text: item.description,
   })),
   ...skillGroups.map((group) => ({
     title: `${group.title} skills`,
-    href: "#skills",
+    href: `#${resumeSourceId("skills", group.title)}`,
     text: `${group.title}: ${group.skills.join(", ")}.`,
   })),
   ...education.map((item) => ({
     title: "Education",
-    href: "#education",
+    href: `#${resumeSourceId("education", item.school)}`,
     text: `${item.school}: ${item.detail}, ${item.date}, ${item.location}.`,
   })),
   {
     title: "Contact",
-    href: "#contact",
+    href: "#resume-contact-links",
     text: contact
       .map((item) => `${item.label}: ${item.value} (${item.href})`)
       .join(". "),
@@ -52,7 +50,7 @@ const sources: ResumeSource[] = [
   },
   {
     title: "About this site",
-    href: "#chat",
+    href: "#resume-search-summary",
     text: "This résumé portfolio uses Next.js, TypeScript, Radix Themes, Tailwind CSS, and Lucide icons. The résumé search matches questions to existing portfolio excerpts locally in the browser without downloading an AI model. The résumé PDF can be downloaded using the Download résumé button.",
   },
 ];

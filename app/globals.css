@@ -1542,3 +1542,28 @@ summary {
 main section[tabindex="-1"]:focus {
   outline: none;
 }
+
+/* Search links reveal the exact source; highlight it without changing layout. */
+.resume-source {
+  scroll-margin-block: 12px;
+}
+.resume-source:target,
+.resume-source:focus {
+  background-color: var(--accent-a3);
+  border-radius: 6px;
+}
+.resume-source:focus-visible,
+.chat-message-assistant:focus-visible {
+  outline: 2px solid var(--accent-8);
+  outline-offset: 4px;
+}
+.chat-message-assistant {
+  scroll-margin-block: 12px;
+}
+@media (max-width: 700px) {
+  .resume-search .chat-log {
+    max-height: none;
+    overflow: visible;
+    overscroll-behavior: auto;
+  }
+}

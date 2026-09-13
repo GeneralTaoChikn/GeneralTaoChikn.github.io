@@ -11,6 +11,30 @@ import {
 } from "@/lib/resume-chat-types";
 import { retrieveSources } from "@/lib/resume-chat-context";
 
+function revealSource(target: HTMLElement) {
+  // A match can be inside one or more collapsed disclosures.
+  for (
+    let parent = target.parentElement;
+    parent;
+    parent = parent.parentElement
+  ) {
+    if (parent instanceof HTMLDetailsElement) parent.open = true;
+  }
+  // Let disclosure layout and scroll anchoring settle before positioning the item.
+  requestAnimationFrame(() => {
+    target.focus({ preventScroll: true });
+    target.scrollIntoView({ block: "start", behavior: "instant" });
+  });
+}
+
+function sourceFromHash(hash: string) {
+  try {
+    return document.getElementById(decodeURIComponent(hash.slice(1)));
+  } catch {
+    return null;
+  }
+}
+
 type Message = ChatTurn & { id: number; sources?: ResumeSource[] };
 const suggestions = [
   "What backend experience does Chris have?",
@@ -24,13 +48,29 @@ export default function ResumeChat() {
   const [notice, setNotice] = useState("");
   const nextId = useRef(0);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const logRef = useRef<HTMLDivElement>(null);
-  const followOutput = useRef(true);
+  const latestAnswerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (followOutput.current && logRef.current)
-      logRef.current.scrollTop = logRef.current.scrollHeight;
+    const answer = latestAnswerRef.current;
+    if (!answer) return;
+    const frame = requestAnimationFrame(() => {
+      // Moving focus also dismisses the mobile keyboard after a typed search.
+      answer.focus({ preventScroll: true });
+      answer.scrollIntoView({ block: "start", behavior: "instant" });
+    });
+    return () => cancelAnimationFrame(frame);
   }, [messages]);
+
+  useEffect(() => {
+    const revealHash = () => {
+      const target = sourceFromHash(window.location.hash);
+      if (target?.classList.contains("resume-source")) revealSource(target);
+    };
+    // Shared links also work when opened directly or revisited with Back/Forward.
+    revealHash();
+    window.addEventListener("hashchange", revealHash);
+    return () => window.removeEventListener("hashchange", revealHash);
+  }, []);
 
   const submit = (value = input) => {
     const question = value.trim().slice(0, MAX_QUESTION_LENGTH);
@@ -50,7 +90,6 @@ export default function ResumeChat() {
       content: sources.length ? "Related résumé excerpts:" : UNKNOWN_ANSWER,
       sources,
     };
-    followOutput.current = true;
     setMessages((current) => [...current, user, answer]);
     setInput("");
     setNotice(
@@ -63,7 +102,7 @@ export default function ResumeChat() {
   return (
     <section id="chat" className="resume-search" aria-labelledby="search-title">
       <details>
-        <summary>
+        <summary id="resume-search-summary" className="resume-source">
           <span id="search-title">
             <Search />
             Search résumé
@@ -129,22 +168,27 @@ export default function ResumeChat() {
           </form>
           <div
             className={`chat-log${messages.length ? " has-results" : ""}`}
-            ref={logRef}
             role="log"
             aria-label="Résumé search results"
             aria-live="polite"
             aria-relevant="additions text"
             tabIndex={messages.length ? 0 : -1}
-            onScroll={() => {
-              const log = logRef.current;
-              if (log)
-                followOutput.current =
-                  log.scrollHeight - log.scrollTop - log.clientHeight < 64;
-            }}
           >
-            {messages.map((message) => (
+            {messages.map((message, messageIndex) => (
               <div
                 key={message.id}
+                ref={
+                  messageIndex === messages.length - 1
+                    ? latestAnswerRef
+                    : undefined
+                }
+                tabIndex={message.role === "assistant" ? -1 : undefined}
+                role={message.role === "assistant" ? "group" : undefined}
+                aria-label={
+                  message.role === "assistant"
+                    ? "Résumé search answer"
+                    : undefined
+                }
                 className={`chat-message chat-message-${message.role}`}
               >
                 <span className="chat-message-label">
@@ -155,7 +199,30 @@ export default function ResumeChat() {
                   <div className="chat-sources">
                     {message.sources.map((source, index) => (
                       <div key={`${source.title}-${index}`}>
-                        <a href={source.href}>
+                        <a
+                          href={source.href}
+                          onClick={(event) => {
+                            if (
+                              event.button !== 0 ||
+                              event.metaKey ||
+                              event.ctrlKey ||
+                              event.shiftKey ||
+                              event.altKey
+                            )
+                              return;
+                            const target = sourceFromHash(source.href);
+                            if (!target) return;
+                            event.preventDefault();
+                            if (window.location.hash !== source.href) {
+                              window.history.pushState(
+                                window.history.state,
+                                "",
+                                source.href,
+                              );
+                            }
+                            revealSource(target);
+                          }}
+                        >
                           {source.title}
                           <ArrowUpRight />
                         </a>
