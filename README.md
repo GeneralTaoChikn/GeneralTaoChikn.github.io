@@ -1,85 +1,62 @@
-# Christopher Diasanta Resume Site
+# Christopher Diasanta Résumé Site
 
-A one-page resume website built with Next.js, TypeScript, Radix Themes, and Lucide icons.
+A one-page résumé website built with Next.js, TypeScript, Radix Themes, and Lucide icons.
 
-## Design system
+## Content and design
 
-The portfolio uses Radix Themes for cards, buttons, badges, and the accessible mobile navigation menu. The root theme in `app/layout.tsx` defines the indigo accent, slate neutrals, and rounded corners. `app/globals.css` defines responsive layouts and typography; Tailwind remains available for utilities and legacy local components.
+The site leads with role, core technologies, and engineering outcomes. Experience includes the promotion timeline and optional additional bullets; selected work explains scope, contribution, and results. Secondary skills and résumé search expand on demand. Interests stay compact, and email, LinkedIn, and the downloadable résumé are accessible near the top.
 
-Light and dark appearances follow the system preference on first visit. The header toggle saves a preference when browser storage is available. Reduced-motion preferences, visible keyboard focus, and a skip link are supported.
+`lib/resumeData.ts` contains résumé facts, shared performance metrics, selected-work summaries, skills, and education. Keep claims grounded in verified experience. The simulation result currently follows the existing résumé baseline: approximately 100 to 2,000 concurrent entities (20×). Work-location preferences remain unspecified.
 
-Résumé content and personal interests live in `lib/resumeData.ts`, with selected-work summaries in `app/page.tsx`. Keep metrics grounded in the résumé when editing. The résumé buttons download `public/Diasanta_Resume.pdf`.
+`app/page.tsx` renders the page. `app/globals.css` defines responsive layouts and typography. Light and dark appearances follow system preference on first visit, with a saved manual override. Reduced motion, visible control focus, a skip link, and mobile section navigation are supported.
 
-## Browser résumé assistant
+## Development
 
-The “Ask my résumé” section searches the shared portfolio data locally and displays matching résumé excerpts with section links. It does not generate answers or download an AI model, and works with the GitHub Pages static export.
-
-- **Results:** `lib/resume-chat-context.ts` ranks excerpts by keyword and alias matches, then returns up to three. Experience descriptions come directly from `lib/resumeData.ts`; structured profile, skill, education, and contact fields use fixed formatting. No model rewrites or invents résumé claims.
-- **Matching:** Short follow-ups can reuse the previous question. Results are labeled as related excerpts, not assertions that the question’s premise is true. Search may miss paraphrases or return a related excerpt that does not fully answer the question. No matches produce a fixed fallback with a contact suggestion.
-- **Privacy and loading:** Search is ready immediately. Questions and history stay in browser memory; no inference service, model host, worker, API key, or account is involved. Clear chat removes the conversation; reloading also clears it.
-- **Bounds:** Search questions and previous-question context are limited to 500 characters.
-
-`components/resume-chat/resume-chat.tsx` owns the search interface and conversation display. Update résumé facts in `lib/resumeData.ts`; update site implementation facts in the context module if the stack changes.
-
-Run retrieval tests with `npm test`. Build the static deployment with `DEPLOY_TARGET=github-pages npm run build`.
-
-## Getting Started
-
-Install dependencies and run the local server:
-
-```bash
+```sh
 npm install
 npm run dev
 ```
 
-Then open `http://localhost:3000`.
+The development site runs at `http://localhost:3000`.
 
-## Docker
+## Updating the downloadable résumé
 
-Run the Dockerized dev server with hot reload:
+The checked-in PDF is generated from the same data as the page and résumé search. After editing facts in `lib/resumeData.ts`, regenerate it:
 
-```bash
-./rundocker.sh
+```sh
+npx playwright install chromium
+npm run resume:pdf
 ```
 
-Then open `http://localhost:3000`.
+`scripts/generate-resume.ts` produces a single-column, tagged PDF at `public/Diasanta_Resume.pdf`. Inspect its text and pagination after substantial content changes. Commit the regenerated PDF with the content edit. The static site does not need a browser at runtime or during deployment.
 
-To use a different host port:
+If Chromium is already installed, set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` to its executable. Systems with additional browser runtime requirements may need their own font or library configuration.
 
-```bash
-PORT=8080 ./rundocker.sh
+## Résumé search
+
+`components/resume-chat/resume-chat.tsx` provides an optional, collapsed search panel. Suggested searches execute immediately. `lib/resume-chat-context.ts` ranks shared résumé excerpts by keywords and aliases and returns up to three section-linked results. It does not generate answers or download a model.
+
+Questions and history stay in browser memory. Clear searches or reload to remove them. Questions and follow-up context are limited to 500 characters. Related excerpts may not answer every part of a question; unknown facts are not invented.
+
+## Checks
+
+```sh
+npm test
+npx tsc --noEmit
 ```
 
-Build the production image:
+With the development server running and Chromium available:
 
-```bash
-./build.sh
+```sh
+npm run test:browser
 ```
 
-You can also run the production image with Compose using `docker compose up --build`.
+Browser regressions cover mobile section navigation, focus after menu dismissal, keyboard selection, and one-click suggested searches. `TEST_SITE_URL` can override the default `http://localhost:3000`.
 
 ## GitHub Pages
 
-This repo includes a GitHub Actions workflow at `.github/workflows/deploy-github-pages.yml`.
-
-To deploy:
-
-1. Push the project to a GitHub repository named `React_Resume`.
-2. In GitHub, open the repository settings.
-3. Go to `Pages`.
-4. Set `Build and deployment` source to `GitHub Actions`.
-5. Push to the `main` branch.
-
-The site will deploy to:
-
-```text
-https://<your-github-username>.github.io/React_Resume/
+```sh
+DEPLOY_TARGET=github-pages npm run build
 ```
 
-If your repository name is different, update `NEXT_PUBLIC_BASE_PATH` in `.github/workflows/deploy-github-pages.yml` to match it. For example, a repo named `resume` should use `/resume`.
-
-If you deploy to a user site repository named `<your-github-username>.github.io`, set `NEXT_PUBLIC_BASE_PATH` to an empty string.
-
-## Resume Assets
-
-The source PDF is available at `public/Diasanta_Resume.pdf`.
+The workflow at `.github/workflows/deploy-github-pages.yml` builds and deploys the static export. Use an empty `NEXT_PUBLIC_BASE_PATH` for a user-site repository, or the repository path for a project site. The custom domain is configured in `CNAME`.

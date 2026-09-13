@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import ResumeChat from "@/components/resume-chat/resume-chat";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Badge,
   Button,
@@ -12,9 +12,7 @@ import {
 } from "@radix-ui/themes";
 import {
   ArrowDownToLine,
-  ArrowRight,
   ArrowUpRight,
-  BriefcaseBusiness,
   Check,
   ChevronDown,
   Cloud,
@@ -23,6 +21,7 @@ import {
   GraduationCap,
   Layers3,
   Mail,
+  Linkedin,
   MapPin,
   Menu,
   Moon,
@@ -40,6 +39,9 @@ import {
   skillGroups,
   profile,
   hobbies,
+  careerImpact,
+  selectedWork,
+  primarySkillGroups,
 } from "@/lib/resumeData";
 
 const assetPath = (path: string) =>
@@ -49,59 +51,32 @@ const navigation = [
   { id: "experience", label: "Experience" },
   { id: "work", label: "Selected work" },
   { id: "skills", label: "Skills" },
-  { id: "hobbies", label: "Beyond work" },
-  { id: "chat", label: "Ask my résumé" },
+  { id: "education", label: "Education" },
   { id: "contact", label: "Contact" },
 ];
 const achievements = [
   {
-    value: "100×",
+    value: careerImpact.simulation.value,
     label: "simulation scale",
-    note: "~100 to ~10,000 concurrent entities",
+    note: `${careerImpact.simulation.before} to ${careerImpact.simulation.after} concurrent entities`,
     icon: Layers3,
   },
   {
-    value: "75%",
+    value: careerImpact.cpu.value,
     label: "less CPU usage",
-    note: "Optimized Kafka / WebSocket backend",
+    note: `${careerImpact.cpu.before} to ${careerImpact.cpu.after} in mapping backend`,
     icon: ServerCog,
-  },
-  {
-    value: "4",
-    label: "live product demos",
-    note: "Customer-facing technical support",
-    icon: BriefcaseBusiness,
   },
 ];
 const capabilities = [
-  { icon: ServerCog, text: "Production Java & Spring services" },
+  { icon: ServerCog, text: "Java & Spring service development" },
   { icon: Workflow, text: "Kafka & distributed systems" },
   { icon: Code2, text: "Vue & React interfaces" },
   { icon: Cloud, text: "Dockerized microservice delivery" },
 ];
-const projects = [
-  {
-    title: "Cloud Simulation Platform",
-    category: "Real-time systems",
-    icon: Workflow,
-    stack: ["Java", "Spring", "Kafka", "WebSockets", "Vue", "Cesium"],
-    summary:
-      "A real-time simulation environment connecting distributed data pipelines to an interactive geospatial interface.",
-    metric: "100×",
-    metricLabel: "increase in concurrent entity support",
-  },
-  {
-    title: "Service Architecture Migration",
-    category: "Platform engineering",
-    icon: Layers3,
-    stack: ["Spring Boot", "Docker", "REST", "PostgreSQL"],
-    summary:
-      "Extracted monolith capabilities into focused, deployable services while preserving feature parity and defining clear service boundaries.",
-    metric: "REST",
-    metricLabel: "well-defined, independently deployable services",
-  },
-];
 const skillIcons: Record<string, LucideIcon> = {
+  "Backend & streaming": ServerCog,
+  "Data & delivery": Database,
   Core: Layers3,
   Languages: Code2,
   Frontend: Code2,
@@ -134,6 +109,7 @@ function SectionHeading({
 export default function Home() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [activeSection, setActiveSection] = useState("top");
+  const pendingSection = useRef<string | null>(null);
 
   useEffect(() => {
     setTheme(
@@ -175,7 +151,7 @@ export default function Home() {
   };
 
   return (
-    <div id="top" className="site-shell">
+    <div id="top" className="site-shell" tabIndex={-1}>
       <a href="#main-content" className="skip-link">
         Skip to content
       </a>
@@ -237,9 +213,34 @@ export default function Home() {
                 align="end"
                 size="2"
                 aria-label="Mobile navigation"
+                onCloseAutoFocus={(event) => {
+                  const id = pendingSection.current;
+                  pendingSection.current = null;
+                  if (!id) return;
+                  event.preventDefault();
+                  // Wait until the menu releases its scroll lock before navigation.
+                  requestAnimationFrame(() => {
+                    const target = document.getElementById(id);
+                    target?.focus({ preventScroll: true });
+                    target?.scrollIntoView({
+                      behavior: window.matchMedia(
+                        "(prefers-reduced-motion: reduce)",
+                      ).matches
+                        ? "instant"
+                        : "smooth",
+                      block: "start",
+                    });
+                  });
+                }}
               >
                 {navigation.map(({ id, label }) => (
-                  <DropdownMenu.Item key={id} asChild>
+                  <DropdownMenu.Item
+                    key={id}
+                    asChild
+                    onSelect={() => {
+                      pendingSection.current = id;
+                    }}
+                  >
                     <a
                       href={`#${id}`}
                       aria-current={
@@ -250,6 +251,12 @@ export default function Home() {
                     </a>
                   </DropdownMenu.Item>
                 ))}
+                <DropdownMenu.Separator />
+                <DropdownMenu.Item asChild>
+                  <a href={assetPath("/Diasanta_Resume.pdf")} download>
+                    Download résumé
+                  </a>
+                </DropdownMenu.Item>
               </DropdownMenu.Content>
             </DropdownMenu.Root>
           </div>
@@ -268,16 +275,15 @@ export default function Home() {
               <span className="status-dot" />
               Open to engineering opportunities
             </Badge>
-            <p className="eyebrow">Full-stack software engineer</p>
+            <p className="eyebrow">Christopher Diasanta</p>
             <h1 id="hero-title">
-              Thoughtful code.
+              Software Engineer II
               <br />
-              <span>Scalable systems.</span>
+              <span>Java · Spring · Kafka</span>
             </h1>
             <p className="hero-intro">
-              I’m Chris. I build Java and Spring applications that connect
-              reliable backend services, real-time data, and intuitive
-              interfaces.
+              I build backend services and real-time simulation systems at HII,
+              connecting Kafka data pipelines with Vue and React interfaces.
             </p>
             <div className="hero-meta">
               <span>
@@ -298,14 +304,23 @@ export default function Home() {
               </Button>
               <Button size="3" variant="outline" asChild>
                 <a href="mailto:chrisdiasanta@gmail.com">
-                  Let’s connect
+                  <Mail />
+                  Email Chris
                   <ArrowUpRight />
                 </a>
               </Button>
+              <Button size="3" variant="ghost" asChild>
+                <a
+                  href={contact.find((item) => item.label === "LinkedIn")!.href}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <Linkedin /> LinkedIn <ArrowUpRight />
+                </a>
+              </Button>
             </div>
-            <a className="explore-link" href="#work">
-              Explore selected work
-              <ArrowRight />
+            <a className="hero-email" href="mailto:chrisdiasanta@gmail.com">
+              chrisdiasanta@gmail.com
             </a>
           </div>
           <Card className="profile-card" size="3">
@@ -356,7 +371,7 @@ export default function Home() {
           ))}
         </section>
 
-        <section id="experience" className="content-section">
+        <section id="experience" className="content-section" tabIndex={-1}>
           <SectionHeading
             number="01"
             title="Experience"
@@ -375,13 +390,12 @@ export default function Home() {
                 </Badge>
               </div>
               <div className="role-history">
-                <span>Sep 2021 — Present</span>
+                <span>At HII: Sep 2021 — Present</span>
                 <span>Remote · Virginia</span>
               </div>
               <p className="job-summary">
-                Building and scaling cloud simulation products across backend
-                services, streaming infrastructure, and browser-based
-                visualization.
+                Backend services, streaming infrastructure, and visualization
+                for cloud simulation, including R&D prototypes.
               </p>
               <div className="career-path">
                 <div>
@@ -405,7 +419,7 @@ export default function Home() {
               </ul>
               <details className="experience-details">
                 <summary>
-                  More contributions
+                  More experience
                   <ChevronDown />
                 </summary>
                 <ul className="experience-highlights">
@@ -455,25 +469,38 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="work" className="content-section">
+        <section id="work" className="content-section" tabIndex={-1}>
           <SectionHeading
             number="02"
             title="Selected work"
-            description="A closer look at systems I’ve helped build."
+            description="My contributions, technical scope, and results."
           />
           <div className="project-grid">
-            {projects.map(({ icon: Icon, ...project }) => (
+            {selectedWork.map((project) => (
               <Card key={project.title} className="project-card" size="4">
                 <div className="project-top">
                   <span className="icon-tile large">
-                    <Icon />
+                    <Workflow />
                   </span>
                   <Badge color="gray" variant="soft">
                     {project.category}
                   </Badge>
                 </div>
                 <h3>{project.title}</h3>
-                <p>{project.summary}</p>
+                <dl className="project-details">
+                  <div>
+                    <dt>Scope</dt>
+                    <dd>{project.scope}</dd>
+                  </div>
+                  <div>
+                    <dt>My contribution</dt>
+                    <dd>{project.contribution}</dd>
+                  </div>
+                  <div>
+                    <dt>Result</dt>
+                    <dd>{project.result}</dd>
+                  </div>
+                </dl>
                 <div className="project-stack">
                   {project.stack.map((technology) => (
                     <Badge key={technology} color="gray" variant="outline">
@@ -481,23 +508,19 @@ export default function Home() {
                     </Badge>
                   ))}
                 </div>
-                <div className="project-result">
-                  <strong>{project.metric}</strong>
-                  <span>{project.metricLabel}</span>
-                </div>
               </Card>
             ))}
           </div>
         </section>
 
-        <section id="skills" className="content-section">
+        <section id="skills" className="content-section" tabIndex={-1}>
           <SectionHeading
             number="03"
-            title="Technical toolkit"
-            description="The tools behind the work."
+            title="Technical skills"
+            description="Core tools used in the work above."
           />
           <Card className="skills-card" size="3">
-            {skillGroups.map((group) => {
+            {primarySkillGroups.map((group) => {
               const Icon = skillIcons[group.title] || Code2;
               return (
                 <div className="skill-row" key={group.title}>
@@ -516,10 +539,33 @@ export default function Home() {
               );
             })}
           </Card>
+          <details className="additional-skills">
+            <summary>
+              Additional languages, libraries & tools <ChevronDown />
+            </summary>
+            <div className="additional-skills-grid">
+              {skillGroups.map((group) => (
+                <div key={group.title}>
+                  <h3>{group.title}</h3>
+                  <p>
+                    {group.skills
+                      .filter(
+                        (skill) =>
+                          !primarySkillGroups.some((primary) =>
+                            primary.skills.includes(skill),
+                          ),
+                      )
+                      .join(" · ")}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </details>
         </section>
 
         <section
           id="education"
+          tabIndex={-1}
           className="content-section"
           aria-label="Education"
         >
@@ -541,48 +587,18 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="hobbies" className="content-section">
-          <SectionHeading
-            number="05"
-            title="Beyond the screen"
-            description="A little of what keeps me curious."
-          />
-          <div className="hobby-grid">
-            {hobbies.map((hobby) => (
-              <Card asChild key={hobby.name} className="hobby-card">
-                <article>
-                  <div className="hobby-image">
-                    <Image
-                      src={assetPath(hobby.image)}
-                      alt=""
-                      fill
-                      sizes="(max-width: 560px) 90vw, (max-width: 1000px) 45vw, 20vw"
-                    />
-                  </div>
-                  <div className="hobby-copy">
-                    <h3>{hobby.name}</h3>
-                    <p>{hobby.note}</p>
-                  </div>
-                </article>
-              </Card>
-            ))}
-          </div>
-        </section>
-
-        <ResumeChat />
-
         <section
           id="contact"
+          tabIndex={-1}
           className="contact-section"
           aria-labelledby="contact-title"
         >
           <div>
             <p className="eyebrow">Let’s connect</p>
-            <h2 id="contact-title">
-              Good work starts with
-              <br />a conversation.
-            </h2>
-            <p>Have a role in mind? I’d love to hear about it.</p>
+            <h2 id="contact-title">Let’s talk about your team.</h2>
+            <p>
+              {profile.opportunities}. Based in {profile.location}.
+            </p>
           </div>
           <div className="contact-actions">
             <Button size="3" asChild>
@@ -595,6 +611,15 @@ export default function Home() {
             <span>chrisdiasanta@gmail.com</span>
           </div>
         </section>
+        <section
+          id="hobbies"
+          className="interests-section"
+          aria-labelledby="interests-title"
+        >
+          <h2 id="interests-title">Outside work</h2>
+          <p>{hobbies.map((hobby) => hobby.name).join(" · ")}</p>
+        </section>
+        <ResumeChat />
       </main>
       <footer className="site-footer">
         <div>

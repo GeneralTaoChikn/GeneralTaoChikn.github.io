@@ -1,6 +1,6 @@
 // lib/resumeData.ts
 
-import { Globe, Linkedin, Mail, MapPin, Phone } from "lucide-react";
+import { Globe, Linkedin, Mail, Phone } from "lucide-react";
 
 export const profile = {
   name: "Christopher Diasanta",
@@ -8,7 +8,7 @@ export const profile = {
   company: "Mission Technologies, a division of HII",
   location: "Virginia Beach, VA",
   clearance: "Active Secret clearance",
-  opportunities: "Open to backend, platform, and software engineering roles",
+  opportunities: "Open to backend and platform engineering roles",
   history:
     "Software Engineer II: Apr 2025–Present. Software Engineer I: Sep 2021–Apr 2025. Remote, Virginia.",
 };
@@ -42,10 +42,15 @@ export const contact = [
   },
 ];
 
-// 2. Achievements/Metrics
+// Shared by the website, search, and generated PDF.
+export const careerImpact = {
+  simulation: { value: "20×", before: "~100", after: "~2,000" },
+  cpu: { value: "75%", before: "~100%", after: "~25%" },
+};
+
 export const metrics = [
-  { value: "100x", label: "simulation entity scale-up" },
-  { value: "75%", label: "CPU utilization reduction" },
+  { value: careerImpact.simulation.value, label: "simulation entity scale-up" },
+  { value: careerImpact.cpu.value, label: "CPU utilization reduction" },
   { value: "4", label: "live customer demonstrations" },
 ];
 
@@ -72,45 +77,79 @@ export const highlights = [
 // 4. Experience Bullet Points
 export const experienceBullets = [
   {
-    title: "Simulation Platform Development",
-    description:
-      "Built and iterated R&D prototypes for a cloud-based simulation platform, integrating Kafka-based data pipelines, Java Spring services, WebSocket messaging, and Vue/Cesium visualization to validate real-time system capabilities.",
+    title: "Data Pipeline & Simulation Scaling",
+    description: `Built distributed pipelines and streaming services for a Monte Carlo simulation platform, scaling concurrent entity support from about ${careerImpact.simulation.before.slice(1)} to about ${careerImpact.simulation.after.slice(1)} (${careerImpact.simulation.value}).`,
   },
   {
-    title: "API Design & Integration",
-    description:
-      "Designed and implemented RESTful APIs using Spring Boot, integrating with Vue/React frontend components and external services.",
+    title: "Real-time Mapping Performance Improvement",
+    description: `Optimized concurrent message processing in a Java Spring Kafka/WebSocket backend for Vue/Cesium mapping, reducing CPU utilization from about ${careerImpact.cpu.before.slice(1)} to about ${careerImpact.cpu.after.slice(1)}.`,
   },
   {
     title: "Microservices Migration",
     description:
-      "Led a monolith-to-microservices migration by defining service boundaries and extracting services while maintaining feature parity.",
+      "Led a monolith-to-microservices migration: defined service boundaries and extracted services while maintaining feature parity.",
   },
   {
-    title: "Security Remediation",
+    title: "Simulation Platform Development",
     description:
-      "Remediated security vulnerabilities by upgrading application dependencies and resolving CVE findings, reducing security exposure while maintaining build stability and compatibility.",
+      "Built cloud simulation R&D prototypes connecting Kafka pipelines, Java Spring services, WebSocket messaging, and Vue/Cesium visualization.",
+  },
+  {
+    title: "API Design & Integration",
+    description:
+      "Designed REST APIs with Spring Boot and integrated them with Vue/React interfaces and external services.",
   },
   {
     title: "Persistence Layer Optimization",
     description:
-      "Migrated an application persistence layer to Spring Data JPA/Hibernate, reducing query complexity and improving endpoint performance through batching, caching, and optimized database access patterns.",
+      "Migrated persistence to Spring Data JPA/Hibernate, using batching, caching, and optimized database access to improve endpoint performance and reduce query complexity.",
+  },
+  {
+    title: "Security Remediation",
+    description:
+      "Resolved dependency vulnerabilities and CVE findings while maintaining build stability and application compatibility.",
   },
   {
     title: "Customer Demonstration Support",
     description:
-      "Supported four live customer-facing product demonstrations by troubleshooting real-time technical issues and partnering with Sales and Product Management to translate platform capabilities into clear technical value for prospective customers.",
+      "Supported four live customer demonstrations, troubleshooting technical issues with Sales and Product Management and explaining platform capabilities.",
+  },
+];
+
+export const selectedWork = [
+  {
+    title: "Cloud simulation & real-time mapping",
+    category: "Backend & streaming",
+    stack: ["Java", "Spring", "Kafka", "WebSockets", "Vue", "Cesium"],
+    scope:
+      "Simulation R&D and streaming systems with an interactive geospatial interface.",
+    contribution:
+      "Built data pipelines and services, connected them to Vue/Cesium visualization, and optimized concurrent message processing in the mapping backend.",
+    result: `Simulation entity support grew from ${careerImpact.simulation.before} to ${careerImpact.simulation.after}. Mapping backend CPU utilization fell from ${careerImpact.cpu.before} to ${careerImpact.cpu.after}.`,
   },
   {
-    title: "Data Pipeline & Simulation Scaling",
-    description:
-      "Built distributed data pipelines and real-time streaming services for a cloud-based Monte Carlo simulation platform, scaling concurrent entity support from about 100 to about 10,000—a 100× increase—while reducing processing latency and improving simulation throughput.",
+    title: "Monolith-to-microservices migration",
+    category: "Service architecture",
+    stack: ["Spring Boot", "Docker", "REST"],
+    scope:
+      "Extracting services from an existing monolith while preserving feature parity.",
+    contribution:
+      "Led the migration, defined service boundaries, and extracted capabilities into services. Built and deployed features in a Dockerized microservices architecture.",
+    result:
+      "Preserved existing functionality while separating capabilities into focused services.",
+  },
+];
+
+export const primarySkillGroups = [
+  {
+    title: "Backend & streaming",
+    skills: ["Java", "Spring Boot", "Apache Kafka", "REST APIs", "WebSockets"],
   },
   {
-    title: "Real-time Mapping Performance Improvement",
-    description:
-      "Improved scalability of a Java Spring Kafka/WebSocket backend for a Vue.js/Cesium real-time mapping application by optimizing concurrent message processing, reducing CPU utilization from about 100% to about 25% and lowering infrastructure resource demand.",
+    title: "Data & delivery",
+    skills: ["SQL", "PostgreSQL", "Spring Data JPA", "Docker", "Git", "CI/CD"],
   },
+  { title: "Frontend", skills: ["JavaScript", "Vue.js", "React", "Cesium"] },
 ];
 
 // 5. Skill Groups

@@ -8,7 +8,9 @@
     "build:pages": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "node --import tsx --test tests/*.test.ts"
+    "test": "node --import tsx --test tests/*.test.ts",
+    "resume:pdf": "tsx scripts/generate-resume.ts",
+    "test:browser": "node --import tsx --test tests/*.browser.ts"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.1.2",
@@ -29,6 +31,7 @@
     "@types/react-dom": "^19.0.3",
     "eslint": "^9.20.1",
     "eslint-config-next": "^15.1.7",
+    "playwright": "^1.63.0",
     "postcss": "^8.5.2",
     "tailwindcss": "^3.4.17",
     "tsx": "^4.23.13",

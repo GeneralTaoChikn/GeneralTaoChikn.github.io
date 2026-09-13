@@ -1,16 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Badge, Button, Card, TextArea } from "@radix-ui/themes";
-import {
-  ArrowUpRight,
-  FileText,
-  LockKeyhole,
-  MessageCircle,
-  Search,
-  Send,
-  Trash2,
-} from "lucide-react";
+import { Button, TextArea } from "@radix-ui/themes";
+import { ArrowUpRight, ChevronDown, Search, Trash2 } from "lucide-react";
 import {
   MAX_QUESTION_LENGTH,
   UNKNOWN_ANSWER,
@@ -19,17 +11,12 @@ import {
 } from "@/lib/resume-chat-types";
 import { retrieveSources } from "@/lib/resume-chat-context";
 
-type Message = ChatTurn & {
-  id: number;
-  sources?: ResumeSource[];
-};
+type Message = ChatTurn & { id: number; sources?: ResumeSource[] };
 const suggestions = [
   "What backend experience does Chris have?",
   "How has Chris improved performance?",
   "Where did Chris study?",
 ];
-const assetPath = (path: string) =>
-  `${process.env.NEXT_PUBLIC_BASE_PATH || ""}${path}`;
 
 export default function ResumeChat() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -45,8 +32,8 @@ export default function ResumeChat() {
       logRef.current.scrollTop = logRef.current.scrollHeight;
   }, [messages]);
 
-  const submit = () => {
-    const question = input.trim().slice(0, MAX_QUESTION_LENGTH);
+  const submit = (value = input) => {
+    const question = value.trim().slice(0, MAX_QUESTION_LENGTH);
     if (!question) return;
     const previousQuestion = messages.findLast(
       (message) => message.role === "user",
@@ -72,123 +59,28 @@ export default function ResumeChat() {
         : "No matching résumé excerpts found.",
     );
   };
-  const reset = () => {
-    setMessages([]);
-    setInput("");
-    setNotice("Conversation cleared.");
-    inputRef.current?.focus();
-  };
 
   return (
-    <section id="chat" className="content-section" aria-labelledby="chat-title">
-      <div className="section-heading">
-        <div className="section-title">
-          <span className="section-number">06</span>
-          <h2 id="chat-title">Ask my résumé</h2>
-        </div>
-        <p>Find experience, skills, and education in my résumé.</p>
-      </div>
-      <div className="resume-chat-layout">
-        <aside className="chat-intro">
-          <span className="icon-tile large">
-            <MessageCircle />
+    <section id="chat" className="resume-search" aria-labelledby="search-title">
+      <details>
+        <summary>
+          <span id="search-title">
+            <Search />
+            Search résumé
           </span>
-          <h3>What would you like to know?</h3>
-          <p>
-            Search Chris’s skills, career, and education. Results show existing
-            résumé text from this portfolio, with links to the relevant sections.
-            No answers are generated.
+          <ChevronDown />
+        </summary>
+        <div className="search-content">
+          <p className="search-description">
+            Find existing résumé excerpts by topic. Your searches stay in this
+            browser.
           </p>
-          <div className="chat-privacy">
-            <LockKeyhole />
-            <span>
-              Your questions stay in this browser. No account or API key needed.
-            </span>
-          </div>
-          <a
-            href={assetPath("/Diasanta_Resume.pdf")}
-            download
-            className="explore-link"
-          >
-            <FileText />
-            Prefer the full résumé?
-            <ArrowUpRight />
-          </a>
-        </aside>
-        <Card className="resume-chat-card" size="3">
-          <div className="chat-header">
-            <div>
-              <span className="icon-tile">
-                <Search />
-              </span>
-              <div>
-                <h3>Résumé search</h3>
-                <span>Excerpts from this portfolio</span>
-              </div>
-            </div>
-            <Badge color="green" variant="soft">
-              On-device
-            </Badge>
-          </div>
-          <div
-            className="chat-log"
-            ref={logRef}
-            role="log"
-            aria-label="Résumé conversation"
-            aria-live="polite"
-            aria-relevant="additions text"
-            tabIndex={0}
-            onScroll={() => {
-              const log = logRef.current;
-              if (log)
-                followOutput.current =
-                  log.scrollHeight - log.scrollTop - log.clientHeight < 64;
-            }}
-          >
-            {messages.length === 0 ? (
-              <div className="chat-empty">
-                <Search />
-                <p>
-                  Ask about backend experience, performance improvements, or the
-                  tools Chris uses.
-                </p>
-              </div>
-            ) : (
-              messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`chat-message chat-message-${message.role}`}
-                >
-                  <span className="chat-message-label">
-                    {message.role === "user" ? "You" : "Résumé search"}
-                  </span>
-                  <p>{message.content}</p>
-                  {message.sources && message.sources.length > 0 && (
-                    <div className="chat-sources">
-                      {message.sources.map((source, index) => (
-                        <div key={`${source.title}-${index}`}>
-                          <a href={source.href}>
-                            {source.title}
-                            <ArrowUpRight />
-                          </a>
-                          <p>{source.text}</p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))
-            )}
-          </div>
-          <div className="chat-suggestions" aria-label="Suggested questions">
+          <div className="chat-suggestions" aria-label="Suggested searches">
             {suggestions.map((question) => (
               <button
                 key={question}
                 type="button"
-                onClick={() => {
-                  setInput(question);
-                  inputRef.current?.focus();
-                }}
+                onClick={() => submit(question)}
               >
                 {question}
                 <ArrowUpRight />
@@ -202,7 +94,9 @@ export default function ResumeChat() {
               submit();
             }}
           >
-            <label htmlFor="resume-question">Your question</label>
+            <label htmlFor="resume-question">
+              Search by skill, experience, or education
+            </label>
             <TextArea
               id="resume-question"
               ref={inputRef}
@@ -210,7 +104,7 @@ export default function ResumeChat() {
               onChange={(event) => setInput(event.target.value)}
               maxLength={MAX_QUESTION_LENGTH}
               rows={2}
-              placeholder="Ask about Chris’s résumé…"
+              placeholder="For example: Kafka or performance improvements"
               aria-describedby="chat-input-help"
               onKeyDown={(event) => {
                 if (
@@ -228,38 +122,79 @@ export default function ResumeChat() {
                 Enter to search · Shift + Enter for a new line
               </span>
               <Button type="submit" disabled={!input.trim()}>
-                <Send />
+                <Search />
                 Search
               </Button>
             </div>
           </form>
-          <div className="chat-bottom">
-            <span>
-              <LockKeyhole />
-              Runs locally · No model download
-            </span>
-            <Button
-              type="button"
-              size="1"
-              variant="ghost"
-              color="gray"
-              disabled={messages.length === 0}
-              onClick={reset}
-            >
-              <Trash2 />
-              Clear chat
-            </Button>
+          <div
+            className={`chat-log${messages.length ? " has-results" : ""}`}
+            ref={logRef}
+            role="log"
+            aria-label="Résumé search results"
+            aria-live="polite"
+            aria-relevant="additions text"
+            tabIndex={messages.length ? 0 : -1}
+            onScroll={() => {
+              const log = logRef.current;
+              if (log)
+                followOutput.current =
+                  log.scrollHeight - log.scrollTop - log.clientHeight < 64;
+            }}
+          >
+            {messages.map((message) => (
+              <div
+                key={message.id}
+                className={`chat-message chat-message-${message.role}`}
+              >
+                <span className="chat-message-label">
+                  {message.role === "user" ? "You" : "Résumé search"}
+                </span>
+                <p>{message.content}</p>
+                {!!message.sources?.length && (
+                  <div className="chat-sources">
+                    {message.sources.map((source, index) => (
+                      <div key={`${source.title}-${index}`}>
+                        <a href={source.href}>
+                          {source.title}
+                          <ArrowUpRight />
+                        </a>
+                        <p>{source.text}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
-          <p className="chat-disclaimer">
-            Results are matching excerpts, and may not answer every part of your
-            question. For details the résumé doesn’t cover,{" "}
-            <a href="mailto:chrisdiasanta@gmail.com">ask Chris</a>.
-          </p>
+          {!!messages.length && (
+            <div className="search-footer">
+              <p>
+                Need more detail?{" "}
+                <a href="mailto:chrisdiasanta@gmail.com">Email Chris</a>.
+              </p>
+              <Button
+                type="button"
+                size="1"
+                variant="ghost"
+                color="gray"
+                onClick={() => {
+                  setMessages([]);
+                  setInput("");
+                  setNotice("Search history cleared.");
+                  inputRef.current?.focus();
+                }}
+              >
+                <Trash2 />
+                Clear searches
+              </Button>
+            </div>
+          )}
           <p className="sr-only" role="status">
             {notice}
           </p>
-        </Card>
-      </div>
+        </div>
+      </details>
     </section>
   );
 }
