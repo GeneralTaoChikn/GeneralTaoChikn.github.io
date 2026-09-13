@@ -1398,24 +1398,6 @@ summary {
 .skill-badges .rt-Badge {
   font-size: 14px;
 }
-.interests-section {
-  display: flex;
-  align-items: baseline;
-  gap: 20px;
-  padding: 24px 0;
-  border-top: 1px solid var(--gray-a4);
-}
-.interests-section h2 {
-  font-size: 15px;
-  margin: 0;
-  white-space: nowrap;
-}
-.interests-section p {
-  font-size: 14px;
-  line-height: 1.8;
-  color: var(--gray-11);
-  margin: 0;
-}
 .resume-search {
   margin: 0 0 36px;
   border: 1px solid var(--gray-a5);
@@ -1521,10 +1503,6 @@ summary {
   }
   .additional-skills-grid {
     grid-template-columns: 1fr;
-  }
-  .interests-section {
-    flex-direction: column;
-    gap: 8px;
   }
   .project-details dd {
     font-size: 15px;

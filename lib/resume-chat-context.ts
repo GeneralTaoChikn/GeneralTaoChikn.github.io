@@ -1,7 +1,6 @@
 import { resumeSourceId } from "./resume-source-id";
 import {
   contact,
-  hobbies,
   education,
   experienceBullets,
   profile,
@@ -44,11 +43,6 @@ const sources: ResumeSource[] = [
       .join(". "),
   },
   {
-    title: "Interests",
-    href: "#hobbies",
-    text: `Chris’s interests include ${hobbies.map((hobby) => hobby.name.toLowerCase()).join(", ")}.`,
-  },
-  {
     title: "About this site",
     href: "#resume-search-summary",
     text: "This résumé portfolio uses Next.js, TypeScript, Radix Themes, Tailwind CSS, and Lucide icons. The résumé search matches questions to existing portfolio excerpts locally in the browser without downloading an AI model. The résumé PDF can be downloaded using the Download résumé button.",
@@ -78,9 +72,6 @@ const aliases: Record<string, string[]> = {
   performance: ["cpu", "scaling", "optimization"],
   impact: ["cpu", "scaling"],
   achievements: ["cpu", "scaling"],
-  hobbies: ["interests"],
-  hobby: ["interests"],
-  interests: ["interests"],
   email: ["contact"],
   phone: ["contact"],
   reach: ["contact"],

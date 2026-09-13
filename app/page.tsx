@@ -40,7 +40,6 @@ import {
   experienceBullets,
   skillGroups,
   profile,
-  hobbies,
   careerImpact,
   selectedWork,
   primarySkillGroups,
@@ -628,15 +627,6 @@ export default function Home() {
             </Button>
             <span>chrisdiasanta@gmail.com</span>
           </div>
-        </section>
-        <section
-          id="hobbies"
-          tabIndex={-1}
-          className="interests-section resume-source"
-          aria-labelledby="interests-title"
-        >
-          <h2 id="interests-title">Outside work</h2>
-          <p>{hobbies.map((hobby) => hobby.name).join(" · ")}</p>
         </section>
         <ResumeChat />
       </main>
